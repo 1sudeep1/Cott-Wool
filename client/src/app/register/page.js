@@ -1,9 +1,12 @@
 'use client'
-import axios from 'axios'
 import { Formik, Form, Field } from 'formik'
 import Link from 'next/link'
-import React, { useState } from 'react'
+import React from 'react'
 import * as Yup from 'yup'
+import {Button} from "@nextui-org/react";
+import toast, { Toaster } from 'react-hot-toast';
+import { useRouter } from 'next/navigation'
+
 
 const getCharacterValidationError = (str) => {
     return (`Your password must have at least 1 ${str}`)
@@ -20,63 +23,84 @@ const SignupSchema = Yup.object().shape({
     confirmPassword: Yup.string().required('please retype your password').oneOf([Yup.ref('password')], "password doesnot match")
 })
 
+
 const Register = () => {
-    let [user, setUser] = useState({ firstName: '', lastName: '', email: '', phone: '', gender: 'male', dob: '', password: '', confirmPassword:'' })
 
-    const handleInput = (e) => {
-        const { name, value, type } = e.target;
-        // If the input is a radio button, set the value directly
-       
-        if (type === 'radio') {
-            setUser({ ...user, [name]: value });
-        } else {
-            setUser({ ...user, [name]: value });
-        }
-    };
+    const router = useRouter()
+    const handleRegister= async(inputItem)=>{
+        console.log("hello", inputItem)
 
-    const handlePost = async (e) => {
-        e.preventDefault()
-        try {
-            const { firstName, lastName, email, phone, gender, dob, password } = user;
-            const res = await axios.post('http://localhost:5000/register', {
-                firstName, lastName, email, phone, gender, dob, password
+        try{
+            const res= await fetch('http://localhost:5000/register', {
+                method:'POST',
+                headers:{'content-Type': 'application/json'},
+                body:JSON.stringify(inputItem)
             })
 
-            if (res.data) {
-                console.log("Registered successfully")
-                alert("registered")
-            } else {
-                console.log("Failed to register")
+
+            const data = await res.json() //controller function, response will convert in json
+            console.log('data' ,data)
+
+            //alert message using react hot tost
+            toast(res.status===200? data.msg + '. please login ' : data.msg,
+            {
+              icon: res.status===200?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
             }
-        } catch (err) {
+          );
+
+          if(res.status===200){
+            router.push('/login')
+          }
+        }catch(err){
             console.log(err)
         }
-
     }
+    
     return (
         <>
+        {/* it displays the alert message from top */}
+        <Toaster />
             <div className='bg-gray-200 py-10'>
                 <div className='max-w-[800px] mx-auto bg-gray-50 p-14 rounded-xl'>
                     <h1 className='text-3xl font-bold text-center'>Register Page</h1>
                     <Formik
-                        initialValues={user}
+                    
+                        initialValues={{
+                            firstName:'',
+                            lastName:'',
+                            email:'',
+                            phone:'',
+                            gender:'',
+                            dob:'',
+                            password:'',
+                            confirmPassword:''
+                        }}
                         validationSchema={SignupSchema}
-                        onSubmit={handlePost}
+
+                        onSubmit={values => {
+                            handleRegister(values)
+                          }}
+                      
                     >
 
-                        {({ errors, touched }) => (
+                        {({ errors, touched, handleChange }) => (
                             <Form className='mx-auto my-16'>
                                 <div className='md:flex justify-between items-center gap-5 md:gap-3 my-5'>
                                     <div className='flex flex-col gap-2 w-full'>
                                         <label className='text-xl' htmlFor="firstName">First Name <span className='text-red-600'>*</span></label>
-                                        <Field name='firstName' id='firstName' placeholder='First Name' className='text-sm p-2 border rounded-lg' value={user.firstName} onChange={handleInput} />
+                                        <Field name='firstName' id='firstName' placeholder='First Name' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
                                         {errors.firstName && touched.firstName ? (
                                             <div className='text-red-600'>{errors.firstName}</div>
                                         ) : null}
                                     </div>
                                     <div className='flex flex-col gap-2 w-full'>
                                         <label className='text-xl' htmlFor="lastName">Last Name <span className='text-red-600'>*</span></label>
-                                        <Field name='lastName' id='lastName' placeholder='Last Name' className='text-sm p-2 border rounded-lg' value={user.lastName} onChange={handleInput} />
+                                        <Field name='lastName' id='lastName' placeholder='Last Name' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
                                         {errors.lastName && touched.lastName ? (
                                             <div className='text-red-600'>{errors.lastName}</div>
                                         ) : null}
@@ -85,7 +109,7 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="email">Email <span className='text-red-600'>*</span></label>
-                                    <Field type='email' name='email' id='email' placeholder='Email' className='text-sm p-2 border rounded-lg' value={user.email} onChange={handleInput} />
+                                    <Field type='email' name='email' id='email' placeholder='Email' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
                                     {errors.email && touched.email ? (
                                         <div className='text-red-600'>{errors.email}</div>
                                     ) : null}
@@ -93,7 +117,7 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="phone">Phone <span className='text-red-600'>*</span></label>
-                                    <Field type='number' name='phone' id='phone' placeholder='Phone' className='text-sm p-2 border rounded-lg' value={user.phone} onChange={handleInput} />
+                                    <Field type='number' name='phone' id='phone' placeholder='Phone' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                     {errors.phone && touched.phone ? (
                                         <div className='text-red-600'>{errors.phone}</div>
                                     ) : null}
@@ -103,11 +127,11 @@ const Register = () => {
                                     <label className='text-xl'>Gender <span className='text-red-600'>*</span></label>
                                     <div className='flex items-center gap-3'>
                                         <div>
-                                            <Field type='radio' name='gender' id='male' value='male' onChange={handleInput} checked={user.gender === 'male'} />
+                                            <Field type='radio' name='gender' id='male' value='male' onChange={handleChange} />
                                             <label htmlFor='male'>Male</label>
                                         </div>
                                         <div>
-                                            <Field type='radio' name='gender' id='female' value='female' onChange={handleInput} checked={user.gender === 'female'} />
+                                            <Field type='radio' name='gender' id='female' value='female' onChange={handleChange} />
                                             <label htmlFor='female'>Female</label>
                                         </div>
                                     </div>
@@ -118,7 +142,7 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="dob">Date of Birth <span className='text-red-600'>*</span></label>
-                                    <Field type='date' name='dob' id='dob' className='text-sm p-2 border rounded-lg' value={user.dob} onChange={handleInput} />
+                                    <Field type='date' name='dob' id='dob' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                     {errors.dob && touched.dob ? (
                                         <div className='text-red-600'>{errors.dob}</div>
                                     ) : null}
@@ -126,7 +150,7 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="password">Password<span className='text-red-600'>*</span></label>
-                                    <Field type='password' name='password' id='password' className='text-sm p-2 border rounded-lg' value={user.password} onChange={handleInput} />
+                                    <Field type='password' name='password' id='password' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                     {errors.password && touched.password ? (
                                         <div className='text-red-600'>{errors.password}</div>
                                     ) : null}
@@ -134,13 +158,13 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="confirmPassword">Confirm Password<span className='text-red-600'>*</span></label>
-                                    <Field type='password' name='confirmPassword' id='confirmPassword' className='text-sm p-2 border rounded-lg' />
+                                    <Field type='password' name='confirmPassword' id='confirmPassword' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                     {errors.confirmPassword && touched.confirmPassword ? (
                                         <div className='text-red-600'>{errors.confirmPassword}</div>
                                     ) : null}
                                 </div>
 
-                                <button onClick={handlePost} type='submit' className='bg-gray-700 text-white p-2 rounded-lg hover:scale-105 hover:transition'>Register</button>
+                                <Button  type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Register</Button> 
 
                                 <p className='text-center my-5'>Already have account? <Link className='text-white bg-blue-700 p-[4px] rounded-lg' href='/login'>Login</Link></p>
                             </Form>
@@ -151,5 +175,6 @@ const Register = () => {
         </>
     )
 }
+
 
 export default Register

@@ -1,14 +1,18 @@
 //importing the model
 const User = require('../models/user')
 
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
+
 //routes function for registering new users
 const registerNewUser = async(req, res) => {
-  console.log(req.body)
   try {
     const existingNumber = await User.findOne({ phone: req.body.phone });
     if (existingNumber) {
       return res.status(403).json({ msg: 'user already exist' })
     } else {
+      const hashPassword= await bcrypt.hash(req.body.password, saltRounds)
+      req.body.password=hashPassword;
       await User.create(req.body)
       res.send({ msg: 'user registered successfully' })
     }
