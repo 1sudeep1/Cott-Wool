@@ -28,8 +28,6 @@ const Register = () => {
 
     const router = useRouter()
     const handleRegister= async(inputItem)=>{
-        console.log("hello", inputItem)
-
         try{
             const res= await fetch('http://localhost:5000/register', {
                 method:'POST',
@@ -39,7 +37,6 @@ const Register = () => {
 
 
             const data = await res.json() //controller function, response will convert in json
-            console.log('data' ,data)
 
             //alert message using react hot tost
             toast(res.status===200? data.msg + '. please login ' : data.msg,
@@ -82,8 +79,9 @@ const Register = () => {
                         }}
                         validationSchema={SignupSchema}
 
-                        onSubmit={values => {
+                        onSubmit={(values, {resetForm}) => {
                             handleRegister(values)
+                            resetForm();
                           }}
                       
                     >
