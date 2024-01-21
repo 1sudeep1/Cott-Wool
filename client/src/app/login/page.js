@@ -34,27 +34,44 @@ const Login = () => {
 
             // Assuming the server sends a JSON response with a 'msg' property
             const data = await res.json();
+            
             //alert message using react hot tost
-            if(data.status=='success'){
-                router.push('/')
-                toast(data.msg, {
-                    icon: '✅',
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff',
-                    },
-                })
-            }else{
-                toast(data.msg, {
-                    icon: '❌',
-                    style: {
-                        borderRadius: '10px',
-                        background: '#333',
-                        color: '#fff',
-                    },
-                })
+            // if(res.status==200){
+            //     router.push('/')
+            //     toast(data.msg, {
+            //         icon: '✅',
+            //         style: {
+            //             borderRadius: '10px',
+            //             background: '#333',
+            //             color: '#fff',
+            //         },
+            //     })
+            // }else{
+            //     toast(data.msg, {
+            //         icon: '❌',
+            //         style: {
+            //             borderRadius: '10px',
+            //             background: '#333',
+            //             color: '#fff',
+            //         },
+            //     })
+            // }
+
+
+            toast(res.status===200? data.msg : data.msg,
+            {
+              icon: res.status===200?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
             }
+          );
+
+          if(res.status===200){
+            router.push('/')
+          }
 
         } catch (error) {
             console.error('Error during login:', error.message);
@@ -104,7 +121,7 @@ const Login = () => {
                                 </div>
 
                                 <div>
-                                    <p>Don't have account? </p>
+                                     <p>Don't have account? </p>
                                     <Link href='/register' className='text-blue-600'>Register</Link>
                                 </div>
                             </div>

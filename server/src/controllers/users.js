@@ -1,6 +1,10 @@
 //importing the model
 const User = require('../models/user')
 
+//importing jwt
+const jwt = require('jsonwebtoken');
+
+//importing bcrypt
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
@@ -48,14 +52,16 @@ const getUserPhonePassword = async (req, res) => {
     const isPasswordValid = await bcrypt.compare(req.body.password, userByPhone.password);
 
     if (isPasswordValid) {
-      res.json({ msg: 'Login successful', status:'success' });
+      const token = jwt.sign({ phone: userByPhone.phone }, process?.env.SECRET_KEY);
+      
+      res.status(200).json({ msg: 'Login successful', token });
 
     } else {
-      res.json({ msg: 'Password incorrect', status:'failed' });
+      res.status(403).json({ msg: 'Password incorrect'});
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Internal Server Error', status:'failed' });
+    res.status(500).json({ msg: 'Internal Server Error'});
   }
 };
 
