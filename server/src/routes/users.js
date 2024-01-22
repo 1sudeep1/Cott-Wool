@@ -11,6 +11,7 @@ router.get('/users', getAllUsers)
 //routes for getting user by id
 router.post('/login', getUserPhonePassword)
 
+
 //routes for updating id
 router.put('/users/:id', updateById)
 

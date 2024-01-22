@@ -54,7 +54,7 @@ const getUserPhonePassword = async (req, res) => {
     if (isPasswordValid) {
       const token = jwt.sign({ phone: userByPhone.phone }, process?.env.SECRET_KEY);
       
-      res.status(200).json({ msg: 'Login successful', token });
+      res.status(200).json({ msg: 'Login successful', token, userByPhone });
 
     } else {
       res.status(403).json({ msg: 'Password incorrect'});

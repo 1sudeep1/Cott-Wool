@@ -5,8 +5,11 @@ import React from 'react'
 import * as Yup from 'yup'
 import { Button } from "@nextui-org/react";
 import { FaFacebook, FaTwitterSquare, FaInstagramSquare } from "react-icons/fa";
-import toast, { Toaster } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation'
+import { setUserLoginDetails } from '../redux/reducerSlices/userSlice'
+import { useDispatch } from 'react-redux'
+
 
 
 const getCharacterValidationError = (str) => {
@@ -19,10 +22,13 @@ const SigninSchema = Yup.object().shape({
     password: Yup.string().min(5, 'password to short').required('please enter a password').matches(/[0-9]/, getCharacterValidationError('digit')).matches(/[a-z]/, getCharacterValidationError('lowercase')).matches(/[A-Z]/, getCharacterValidationError('uppercase')),
 })
 
+
+
+
 const Login = () => {
+    const dispatch= useDispatch();
     const router = useRouter()
     const handleLogin = async (inputLogin) => {
-        console.log('login values', inputLogin);
 
         try {
             const res = await fetch('http://localhost:5000/login', {
@@ -31,10 +37,10 @@ const Login = () => {
                 body: JSON.stringify(inputLogin)
             });
 
+            
 
             // Assuming the server sends a JSON response with a 'msg' property
             const data = await res.json();
-            
             //alert message using react hot tost
             // if(res.status==200){
             //     router.push('/')
@@ -71,6 +77,7 @@ const Login = () => {
 
           if(res.status===200){
             router.push('/')
+            dispatch(setUserLoginDetails(data))
           }
 
         } catch (error) {
