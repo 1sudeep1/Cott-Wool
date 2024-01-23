@@ -3,6 +3,27 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@n
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+
+const navBarConfig = {
+  true: [{ 'label': 'About Us', 'href': '/about' }, { 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
+  false: [{ 'label': 'Features', 'href': '/features' }, { 'label': 'Customers', 'href': '/customers' }]
+}
+
+const AuthButtons=()=>{
+  return(
+    <div className='flex items-center gap-4'>
+    <NavbarItem className="hidden lg:flex">
+     <Link href="/login">Login</Link>
+    </NavbarItem>
+    <NavbarItem className="hidden lg:flex">
+      <Button as={Link} color="primary" href="/register" variant="flat">
+        Sign Up
+      </Button>
+    </NavbarItem>
+  </div>
+  )
+}
 
 const Header = () => {
   const router = useRouter()
@@ -19,35 +40,74 @@ const Header = () => {
           <p className="font-bold text-inherit"> <Link href="/">COTT-WOOL</Link></p>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Features
-            </Link>
-          </NavbarItem>
-          <NavbarItem isActive>
-            <Link href="#" aria-current="page">
-              Customers
-            </Link>
-          </NavbarItem>
-          <NavbarItem>
-            <Link color="foreground" href="#">
-              Integrations
-            </Link>
-          </NavbarItem>
+
+          {
+            isLoggedIn ?
+              <>
+                {navBarConfig[isLoggedIn].map((item, id) => {
+                  return (<NavbarItem key={id} >
+                    <Link color="foreground" href={item.href}>
+                      {item.label}
+                    </Link>
+                  </NavbarItem>)
+                })}
+              </>
+              :
+              <>
+                {navBarConfig[isLoggedIn].map((item, id) => {
+                  return (<NavbarItem key={id} >
+                    <Link color="foreground" href={item.href}>
+                      {item.label}
+                    </Link>
+                  </NavbarItem>)
+                })}
+              </>
+          }
+
         </NavbarContent>
         <NavbarContent justify="end">
-          <NavbarItem className="hidden lg:flex">
-            {isLoggedIn ? <button onClick={handleLogout}>Logout</button> : <Link href="/login">Login</Link>}
-          </NavbarItem>
+
           <NavbarItem>
             {isLoggedIn ?
-              <Button as={Link} color="primary" href="#" variant="flat">
-                {userDetails.firstName}
-              </Button>
+              <div className="flex items-center gap-4 ">
+                <Dropdown placement="bottom-start" >
+                  <DropdownTrigger>
+                    <User
+                      as="button"
+                      avatarProps={{
+                        isBordered: true,
+                        src: "https://as1.ftcdn.net/v2/jpg/05/60/26/08/1000_F_560260880_O1V3Qm2cNO5HWjN66mBh2NrlPHNHOUxW.jpg",
+                      }}
+
+                    />
+                  </DropdownTrigger>
+                  <DropdownMenu aria-label="User Actions" variant="flat" className='bg-gray-400 text-white'>
+
+                    <DropdownItem key="profile" className="h-14 gap-2">
+                      <p className="font-semibold">{`${userDetails.firstName} ${userDetails.lastName}`}</p>
+                      <p className="font-semibold">{userDetails.email}</p>
+                    </DropdownItem>
+
+                    <DropdownItem key="settings">
+                      My Settings
+                    </DropdownItem>
+                    <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                    <DropdownItem key="analytics">
+                      Analytics
+                    </DropdownItem>
+                    <DropdownItem key="system">System</DropdownItem>
+                    <DropdownItem key="configurations">Configurations</DropdownItem>
+                    <DropdownItem key="help_and_feedback">
+                      Help & Feedback
+                    </DropdownItem>
+                    <DropdownItem key="logout" color="danger" className='text-red-600' onClick={handleLogout}>
+                      Log Out
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
+              </div>
               :
-              <Button as={Link} color="primary" href="/register" variant="flat">
-                Sign Up
-              </Button>
+                  <AuthButtons/>
             }
 
           </NavbarItem>

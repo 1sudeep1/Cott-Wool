@@ -20,7 +20,9 @@ export const userSlice = createSlice({
         },
 
         setLogout:(state, actions)=>{
-            state.isLoggedIn=false
+            return{
+              ...initialState
+            }
         }
   }
 
