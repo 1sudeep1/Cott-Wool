@@ -9,6 +9,8 @@ import toast from 'react-hot-toast';
 import { useRouter } from 'next/navigation'
 import { setUserLoginDetails } from '../redux/reducerSlices/userSlice'
 import { useDispatch } from 'react-redux'
+import Header from '../components/header/page'
+import Footer from '../components/footer/page'
 
 
 
@@ -76,7 +78,11 @@ const Login = () => {
           );
 
           if(res.status===200){
-            router.push('/')
+            if(data.userByPhone.role=="Admin"){
+                router.push('/admin')
+            }else{
+                router.push('/')
+            }
             dispatch(setUserLoginDetails(data))
           }
 
@@ -89,6 +95,7 @@ const Login = () => {
 
     return (
         <>
+            <Header/>
             <div className='bg-gray-200 text-white p-10 h-screen'>
 
                 <Formik
@@ -147,6 +154,7 @@ const Login = () => {
 
                 </Formik>
             </div>
+            <Footer/>
         </>
     )
 }

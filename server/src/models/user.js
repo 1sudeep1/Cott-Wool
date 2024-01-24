@@ -9,6 +9,7 @@ const userSchema = new Schema({
   gender: String,
   dob:Date,
   password:String,
+  role:{type:String, enum:['User', 'Admin'], default:'User'}
 });
 
 const User = mongoose.model('User', userSchema);
