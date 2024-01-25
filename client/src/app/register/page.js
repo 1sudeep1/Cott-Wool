@@ -71,6 +71,7 @@ const Register = () => {
                     <Formik
 
                         initialValues={{
+                            
                             firstName: '',
                             lastName: '',
                             email: '',
@@ -83,7 +84,9 @@ const Register = () => {
                         validationSchema={SignupSchema}
 
                         onSubmit={(values, { resetForm }) => {
-                            handleRegister(values)
+                            const fullName= `${values.firstName} ${values.lastName}`
+                            const inputData={ ...values, fullName }
+                            handleRegister(inputData)
                             resetForm();
                         }}
 

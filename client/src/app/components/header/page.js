@@ -84,7 +84,7 @@ const Header = () => {
                   <DropdownMenu aria-label="User Actions" variant="flat" className='bg-gray-400 text-white'>
 
                     <DropdownItem key="profile" className="h-14 gap-2">
-                      <p className="font-semibold">{`${userDetails.firstName} ${userDetails.lastName}`}</p>
+                      <p className="font-semibold">{userDetails.fullName}</p>
                       <p className="font-semibold">{userDetails.email}</p>
                     </DropdownItem>
 

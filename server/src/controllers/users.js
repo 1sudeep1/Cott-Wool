@@ -25,12 +25,13 @@ const registerNewUser = async (req, res) => {
   }
 }
 
-//routes functions for getting all users
+//routes functions for getting all users and server side pagination
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await User.find();
-    res.send(allUsers);
-    res.json({ msg: "all users are fetched" })
+    const count= await User.find().count();
+    const skipCount=(req.query.page-1)*5
+    const allUsers = await User.find().limit(5).skip(skipCount);
+    res.json({ msg: "all users are fetched", allUsers, count })
 
   } catch (err) {
     console.log(err)

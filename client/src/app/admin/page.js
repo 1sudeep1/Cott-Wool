@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../redux/reducerSlices/userSlice'
@@ -11,38 +11,11 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { Formik, Form, Field } from 'formik';
-import { Textarea } from "@nextui-org/react";
 
-import { Select, SelectItem } from "@nextui-org/react";
-
-const animals = [
-  { label: "Cat", value: "cat", description: "The second most popular pet in the world" },
-  { label: "Dog", value: "dog", description: "The most popular pet in the world" },
-  { label: "Elephant", value: "elephant", description: "The largest land animal" },
-  { label: "Lion", value: "lion", description: "The king of the jungle" },
-  { label: "Tiger", value: "tiger", description: "The largest cat species" },
-  { label: "Giraffe", value: "giraffe", description: "The tallest land animal" },
-  {
-    label: "Dolphin",
-    value: "dolphin",
-    description: "A widely distributed and diverse group of aquatic mammals",
-  },
-  { label: "Penguin", value: "penguin", description: "A group of aquatic flightless birds" },
-  { label: "Zebra", value: "zebra", description: "A several species of African equids" },
-  {
-    label: "Shark",
-    value: "shark",
-    description: "A group of elasmobranch fish characterized by a cartilaginous skeleton",
-  },
-  {
-    label: "Whale",
-    value: "whale",
-    description: "Diverse group of fully aquatic placental marine mammals",
-  },
-  { label: "Otter", value: "otter", description: "A carnivorous mammal in the subfamily Lutrinae" },
-  { label: "Crocodile", value: "crocodile", description: "A large semiaquatic reptile" },
-];
+import AddCategories from './addCategories/page';
+import AddProducts from './addProducts/page';
+import Customers from './customers/page';
+import {Pagination} from "@nextui-org/react";
 
 const AuthButtons = () => {
   return (
@@ -96,7 +69,7 @@ const NavAdmin = () => {
                   <DropdownMenu aria-label="User Actions" variant="flat" className='bg-gray-400 text-white'>
 
                     <DropdownItem key="profile" className="h-14 gap-2">
-                      <p className="font-semibold">{`${userDetails.firstName} ${userDetails.lastName}`}</p>
+                      <p className="font-semibold">{userDetails.fullName}</p>
                       <p className="font-semibold">{userDetails.email}</p>
                     </DropdownItem>
 
@@ -169,6 +142,24 @@ const Admin = () => {
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+
+
+  const [users, setUsers]= useState([]);
+  const [count, setCount]= useState(0)
+
+  const fetchAllusers= async(page=1)=>{
+    const res= await fetch(`http://localhost:5000/users?page=${page}`)
+    const data= await res.json()
+    setUsers(data.allUsers)
+    setCount(data.count)
+    
+
+  }
+
+  useEffect(()=>{
+    fetchAllusers()
+  }, [])
+
   return (
     <>
       <NavAdmin />
@@ -195,74 +186,21 @@ const Admin = () => {
         <TabPanel value={value} index={0}>
           Dashboard
         </TabPanel>
+
         <TabPanel value={value} index={1} className='mx-auto'>
-          <h1 className='text-lg mb-5 text-center'>Add Categories</h1>
-          <Formik>
-            <Form>
-              <div className='flex flex-col gap-5'>
-                <div className='flex items-center gap-2 justify-between'>
-                  <label htmlFor="categoryName">Category Name</label>
-                  <Field name="categoryName" id="categoryName" placeholder='category name' className='border p-1 rounded-md' />
-                </div>
-                <div className='flex items-center gap-2 justify-between'>
-                  <label htmlFor="subCategoryName">Sub-category Name</label>
-                  <Field name="subCategoryName" id="subCategoryName" placeholder='sub-category name' className='border p-1 rounded-md' />
-                </div>
-                <Button>Submit</Button>
-              </div>
-            </Form>
-          </Formik>
+          <AddCategories/>
         </TabPanel>
+
         <TabPanel value={value} index={2} className='mx-auto'>
-          <h1 className='text-lg mb-5 text-center'>Add Products</h1>
-          <Formik>
-            <Form>
-              <div className='flex flex-col gap-5'>
-                <div className='flex items-center gap-2 justify-between'>
-                  <label htmlFor="productName">Product Name</label>
-                  <Field name="productName" id="productName" placeholder='product name' className='border p-1 rounded-md' />
-                </div>
-                <div className='flex items-center gap-2 justify-between'>
-                  <label htmlFor="productImage">Product Image</label>
-                  <Field type='file' name="productImage" id="productImage" className='border p-1 rounded-md' />
-                </div>
-                <div className='flex items-center gap-2 justify-between'>
-                  <label htmlFor="productPrice">Product Price</label>
-                  <Field type='number' name="productPrice" id="productPrice" placeholder='product price' className='border p-1 rounded-md' />
-                </div>
-                <div className='flex  gap-2 justify-between'>
-                  <label htmlFor="productDescription">Product Description</label>
-                  <div className="flex w-full flex-wrap md:flex-nowrap mb-6 md:mb-0 gap-4">
-                    <Textarea
-                      id="productDescription" className='border'
-                      placeholder="Enter your Product description"
-                    />
-                  </div>
-                </div>
-                <div className='flex  gap-2 justify-between' >
-                  <label htmlFor="productDescription">Choose Category</label>
-                  <Select
-
-                    placeholder="Select an animal"
-                    selectionMode="multiple"
-                    className="max-w-xs"
-                  >
-                    {animals.map((animal) => (
-                      <SelectItem key={animal.value} value={animal.value} className='bg-gray-400' >
-                        {animal.label}
-                      </SelectItem>
-                    ))}
-                  </Select>
-                </div>
-                <Button>Submit</Button>
-              </div>
-            </Form>
-          </Formik>
+          <AddProducts/>
         </TabPanel>
 
-        <TabPanel value={value} index={3}>
-          Customers
+        <TabPanel value={value} index={3} className='mx-auto'>
+          <Customers usersId={users._id} users={users}/>
+          {/* server side pagination */}
+          <Pagination onChange={(page)=>fetchAllusers(page)}  total={Math.ceil(count/5)} initialPage={1} />
         </TabPanel>
+
         <TabPanel value={value} index={4}>
          All Products
         </TabPanel>
