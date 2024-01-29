@@ -1,27 +1,28 @@
 import React from 'react'
-import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button } from "@nextui-org/react";
+import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+import Link from 'next/link';
 
 const navBarConfig = {
   true: [{ 'label': 'About Us', 'href': '/about' }, { 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
   false: [{ 'label': 'Features', 'href': '/features' }, { 'label': 'Customers', 'href': '/customers' }]
 }
 
-const AuthButtons=()=>{
-  return(
+const AuthButtons = () => {
+  return (
     <div className='flex items-center gap-4'>
-    <NavbarItem className="hidden lg:flex">
-     <Link href="/login">Login</Link>
-    </NavbarItem>
-    <NavbarItem className="hidden lg:flex">
-      <Button as={Link} color="primary" href="/register" variant="flat">
-        Sign Up
-      </Button>
-    </NavbarItem>
-  </div>
+      <NavbarItem className="hidden lg:flex">
+        <Link href="/login">Login</Link>
+      </NavbarItem>
+      <NavbarItem className="hidden lg:flex">
+        <Button as={Link} color="primary" href="/register" variant="flat">
+          Sign Up
+        </Button>
+      </NavbarItem>
+    </div>
   )
 }
 
@@ -89,7 +90,9 @@ const Header = () => {
                     </DropdownItem>
 
                     <DropdownItem key="settings">
-                      My Settings
+                      <Link color="foreground" href="/profile">
+                        My Profile
+                      </Link>
                     </DropdownItem>
                     <DropdownItem key="team_settings">Team Settings</DropdownItem>
                     <DropdownItem key="analytics">
@@ -107,7 +110,7 @@ const Header = () => {
                 </Dropdown>
               </div>
               :
-                  <AuthButtons/>
+              <AuthButtons />
             }
 
           </NavbarItem>

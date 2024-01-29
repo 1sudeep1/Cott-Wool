@@ -9,8 +9,8 @@ const AddProducts = () => {
         { fieldName: "Product Price",type:'number',  name: 'productPrice', placeholder:'enter product price'},
       ]}
       textArea={[{fieldName:'Product Description', name:'productDescription', placeholder:'enter product description'}]}
-      chooseCategory={[{fieldName:'Choose Category', placeholder:'select category'}]}
-      chooseSubCategory={[{fieldName:'Choose Sub Category', placeholder:'select Sub category'}]}
+      chooseCategory={[{fieldName:'Choose Category', placeholder:'select category', name:'productCategory'}]}
+      chooseSubCategory={[{fieldName:'Choose Sub Category', placeholder:'select Sub category', name:'productSubCategory'}]}
       button='Add'
       />
     </>

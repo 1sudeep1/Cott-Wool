@@ -8,6 +8,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation'
 import Header from '../components/header/page'
 import Footer from '../components/footer/page'
+import axios from 'axios'
 
 
 const getCharacterValidationError = (str) => {
@@ -31,14 +32,8 @@ const Register = () => {
     const router = useRouter()
     const handleRegister = async (inputItem) => {
         try {
-            const res = await fetch('http://localhost:5000/register', {
-                method: 'POST',
-                headers: { 'content-Type': 'application/json' },
-                body: JSON.stringify(inputItem)
-            })
-
-
-            const data = await res.json() //controller function, response will convert in json
+            const res = await axios.post('http://localhost:5000/register', inputItem)
+            const data = await res.data //controller function, response will convert in json
 
             //alert message using react hot tost
             toast(res.status === 200 ? data.msg + '. please login ' : data.msg,

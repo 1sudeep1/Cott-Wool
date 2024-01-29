@@ -6,9 +6,8 @@ const AddCategories = () => {
       <DynamicForm formTitle='Add Categories' fieldList={[
         { fieldName: "Category Name", placeholder: 'enter category name', name: 'categoryName' },
       ]}
-      subCategoryFieldList={[{fieldName:'Sub Category Name', name:'subCategoryName'}]}
-      button='Add'
-
+        subCategoryFieldList={[{ fieldName: 'Sub Category Name', name: 'subCategoryName' }]}
+        button='Add'
       />
     </>
   )
