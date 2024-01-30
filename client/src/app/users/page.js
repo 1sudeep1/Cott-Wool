@@ -8,7 +8,7 @@ const RegisterNewUser = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/users');
+        const response = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/users`);
         setData(response.data);
       } catch (error) {
         console.error(error);

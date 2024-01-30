@@ -34,7 +34,7 @@ const Login = () => {
     const handleLogin = async (inputLogin) => {
 
         try {
-            const res = await axios.post('http://localhost:5000/login', inputLogin)
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/login`, inputLogin)
 
             // Assuming the server sends a JSON response with a 'msg' property
             const data = await res.data;
@@ -61,9 +61,9 @@ const Login = () => {
             // }
 
 
-            toast(res.status===200? data.msg : data.msg,
+            toast(data.check===true? data.msg : data.msg,
             {
-              icon: res.status===200?'✅':'❌',
+              icon: data.check===true?'✅':'❌',
               style: {
                 borderRadius: '10px',
                 background: '#333',
@@ -72,7 +72,7 @@ const Login = () => {
             }
           );
 
-          if(res.status===200){
+          if(data.check===true){
             if(data.userByPhone.role=="Admin"){
                 router.push('/admin')
             }else{
@@ -100,12 +100,10 @@ const Login = () => {
                     }}
 
                     validationSchema={SigninSchema}
-
                     onSubmit={(values) => {
                         handleLogin(values)
                     }}
                 >
-
 
                     {({ errors, touched, handleChange }) => (
                         <Form className='flex flex-col align-middle justify-center text-center max-w-[400px] bg-gray-50 text-black gap-5 p-5 rounded-lg mx-auto mt-24'>

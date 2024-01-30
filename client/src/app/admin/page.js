@@ -57,7 +57,7 @@ const Admin = () => {
   const [count, setCount] = useState(0)
 
   const fetchAllusers = async (page = 1) => {
-    const res = await axios.get(`http://localhost:5000/users?page=${page}`)
+    const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/users?page=${page}`)
     const data = await res.data
     setUsers(data.allUsers)
     setCount(data.count)

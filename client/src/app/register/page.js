@@ -32,7 +32,7 @@ const Register = () => {
     const router = useRouter()
     const handleRegister = async (inputItem) => {
         try {
-            const res = await axios.post('http://localhost:5000/register', inputItem)
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/register`, inputItem)
             const data = await res.data //controller function, response will convert in json
 
             //alert message using react hot tost

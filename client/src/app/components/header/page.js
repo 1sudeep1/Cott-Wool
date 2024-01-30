@@ -94,7 +94,7 @@ const Header = () => {
                         My Profile
                       </Link>
                     </DropdownItem>
-                    <DropdownItem key="team_settings">Team Settings</DropdownItem>
+                    <DropdownItem as={Link} href='/change-password' key="team_settings">Change Password</DropdownItem>
                     <DropdownItem key="analytics">
                       Analytics
                     </DropdownItem>

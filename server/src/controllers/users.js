@@ -48,21 +48,20 @@ const getUserPhonePassword = async (req, res) => {
     if (!userByPhone) {
       return res.json({ msg: 'Invalid phone' });
     }
-
+    debugger
     // at first encrypts our password and then Compare passwords from userByPhone and our entered password
     const isPasswordValid = await bcrypt.compare(req.body.password, userByPhone.password);
 
     if (isPasswordValid) {
       const token = jwt.sign({ phone: userByPhone.phone }, process?.env.SECRET_KEY);
-      
-      res.status(200).json({ msg: 'Login successful', token, userByPhone });
+      res.json({ msg: 'Login successful', check:true, token, userByPhone });
 
     } else {
-      res.status(403).json({ msg: 'Password incorrect'});
+      res.json({ msg: 'Password incorrect', check:false});
     }
   } catch (err) {
     console.error(err);
-    res.status(500).json({ msg: 'Internal Server Error'});
+    res.status(500).json({ msg: 'Internal Server Error', check:false});
   }
 };
 
@@ -76,6 +75,7 @@ const updateById = async (req, res) => {
     console.log(err)
   }
 }
+
 
 const deleteById = async (req, res) => {
   try {
@@ -94,9 +94,9 @@ const userLogin = async (req, res) => {
     await User.findOne({ email: email }).then(User => {
       if (User) {
         if (User.password === password) {
-          res.json({ msg: 'success' })
+          res.status(200).json({ msg: 'success' })
         } else {
-          res.json({ msg: 'incorrect password' })
+          res.status(401).json({ msg: 'incorrect password' })
         }
       } else {
         res.json({ msg: 'no data found' })
@@ -110,4 +110,28 @@ const userLogin = async (req, res) => {
   }
 }
 
-module.exports = { registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin }
+const changePassword = async (req, res) => {
+  try {
+    const userByPhone = await User.findOne({ phone: req.body.phone });
+
+    if (!userByPhone) {
+      return res.json({ msg: 'Invalid phone', status:false });
+    }
+
+    const passwordMatch = await bcrypt.compare(req.body.currentPassword, userByPhone.password);
+
+    if (passwordMatch) {
+      const hashPassword = await bcrypt.hash(req.body.password, saltRounds);
+      userByPhone.password = hashPassword;
+      await userByPhone.save();
+      res.json({ msg: 'Password changed successfully', status:true });
+    } else {
+      res.json({ msg: 'Current password did not match', status:false });
+    }
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ msg: 'Internal Server Error', status:false });
+  }
+};
+
+module.exports = { registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword }

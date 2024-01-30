@@ -13,7 +13,7 @@ const DynamicForm = (props) => {
     const [category, setCategory] = useState([])
 
     const fetchCategory = async () => {
-        const res = await axios.get('http://localhost:5000/category')
+        const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
         const data = await res.data
         setCategory(data.allCategory)
     }
@@ -27,7 +27,7 @@ const DynamicForm = (props) => {
 
     const handleCategory = async (inputCategory) => {
         try {
-            const res = await axios.post('http://localhost:5000/category', inputCategory)
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`, inputCategory)
             const data = await res.data;
             toast(res.status===200? data.msg+'Add more categories' : data.msg,
             {
@@ -45,7 +45,7 @@ const DynamicForm = (props) => {
     }
     const handleProduct = async (inputProduct) => {
         try {
-            const res = await axios.post('http://localhost:5000/products', inputProduct)
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`, inputProduct)
             const data = await res.data;
             toast(res.status===200? data.msg+'Add more products' : data.msg,
                 {
