@@ -7,6 +7,9 @@ const port = process.env.PORT
 
 //importing the route that is defined in routes/users
 const userRoute=require('./routes/users')
+const categoryRoute=require('./routes/categoryRoutes')
+const productRoute=require('./routes/productRoutes')
+
 
 //importing the db connection
 const connection=require('./db/connection')
@@ -22,6 +25,8 @@ connection()
 
 //using the route
 app.use(userRoute)
+app.use(categoryRoute)
+app.use(productRoute)
 
 
 

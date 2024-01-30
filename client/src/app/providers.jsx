@@ -2,17 +2,16 @@
 import * as React from "react";
 // 1. import `NextUIProvider` component
 import {NextUIProvider} from "@nextui-org/react";
-import Header from "./components/header/page";
-import Footer from "./components/footer/page";
-
+import {useRouter} from 'next/navigation'
+import { Toaster } from 'react-hot-toast';
 
 function Providers({children}) {
   // 2. Wrap NextUIProvider at the root of your app
+  const router = useRouter();
   return (
-    <NextUIProvider>
-     <Header />
+    <NextUIProvider navigate={router.push}>
+     <Toaster/>
       {children}
-      <Footer />
     </NextUIProvider>
   );
 }

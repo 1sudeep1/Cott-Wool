@@ -2,13 +2,13 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const userSchema = new Schema({ 
-  firstName: String,// String is shorthand for {type: String}
-  lastName: String,// String is shorthand for {type: String}
+  fullName: String,// String is shorthand for {type: String}
   email:String,
   phone:{type:Number, unique:true, required:true},
   gender: String,
   dob:Date,
   password:String,
+  role:{type:String, enum:['User', 'Admin'], default:'User'}
 });
 
 const User = mongoose.model('User', userSchema);

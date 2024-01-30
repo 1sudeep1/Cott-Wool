@@ -1,18 +1,22 @@
 //importing the model
 const User = require('../models/user')
 
+//importing jwt
+const jwt = require('jsonwebtoken');
+
+//importing bcrypt
 const bcrypt = require('bcrypt');
 const saltRounds = 10;
 
 //routes function for registering new users
-const registerNewUser = async(req, res) => {
+const registerNewUser = async (req, res) => {
   try {
     const existingNumber = await User.findOne({ phone: req.body.phone });
     if (existingNumber) {
       return res.status(403).json({ msg: 'user already exist' })
     } else {
-      const hashPassword= await bcrypt.hash(req.body.password, saltRounds)
-      req.body.password=hashPassword;
+      const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
+      req.body.password = hashPassword;
       await User.create(req.body)
       res.send({ msg: 'user registered successfully' })
     }
@@ -21,12 +25,13 @@ const registerNewUser = async(req, res) => {
   }
 }
 
-//routes functions for getting all users
+//routes functions for getting all users and server side pagination
 const getAllUsers = async (req, res) => {
   try {
-    const allUsers = await User.find();
-    res.send(allUsers);
-    res.json({ msg: "all users are fetched" })
+    const count= await User.find().count();
+    const skipCount=(req.query.page-1)*5
+    const allUsers = await User.find().limit(5).skip(skipCount);
+    res.json({ msg: "all users are fetched", allUsers, count })
 
   } catch (err) {
     console.log(err)
@@ -34,15 +39,32 @@ const getAllUsers = async (req, res) => {
 }
 
 //function for getting details by id
-const getUserById = async (req, res) => {
+const getUserPhonePassword = async (req, res) => {
   try {
-    const userById = await User.findById(req.params.id)
-    res.send(userById)
-    res.json({ msg: "details with particular id are fetched" })
+    //it will carry all the detail of particular phone
+    const userByPhone = await User.findOne({ phone: req.body.phone });
+
+    //it will run if phone is not valid
+    if (!userByPhone) {
+      return res.json({ msg: 'Invalid phone' });
+    }
+
+    // at first encrypts our password and then Compare passwords from userByPhone and our entered password
+    const isPasswordValid = await bcrypt.compare(req.body.password, userByPhone.password);
+
+    if (isPasswordValid) {
+      const token = jwt.sign({ phone: userByPhone.phone }, process?.env.SECRET_KEY);
+      
+      res.status(200).json({ msg: 'Login successful', token, userByPhone });
+
+    } else {
+      res.status(403).json({ msg: 'Password incorrect'});
+    }
   } catch (err) {
-    console.log(err)
+    console.error(err);
+    res.status(500).json({ msg: 'Internal Server Error'});
   }
-}
+};
 
 //function for updating details by id
 const updateById = async (req, res) => {
@@ -88,4 +110,4 @@ const userLogin = async (req, res) => {
   }
 }
 
-module.exports = { registerNewUser, getAllUsers, getUserById, updateById, deleteById, userLogin }
+module.exports = { registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin }

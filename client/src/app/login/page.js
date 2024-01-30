@@ -1,46 +1,128 @@
 'use client'
-import React, { useState } from 'react'
-import { Formik, Form, Field, ErrorMessage } from 'formik';
+import { Formik, Form, Field } from 'formik'
+import Link from 'next/link'
+import React from 'react'
+import * as Yup from 'yup'
+import { Button } from "@nextui-org/react";
 import { FaFacebook, FaTwitterSquare, FaInstagramSquare } from "react-icons/fa";
-import Link from 'next/link';
-import {Button} from '@nextui-org/button'; 
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation'
+import { setUserLoginDetails } from '../redux/reducerSlices/userSlice'
+import { useDispatch } from 'react-redux'
+import Header from '../components/header/page'
+import Footer from '../components/footer/page'
+import axios from 'axios'
 
-const Login =() => {
+
+
+const getCharacterValidationError = (str) => {
+    return (`Your password must have at least 1 ${str}`)
+}
+
+
+const SigninSchema = Yup.object().shape({
+    phone: Yup.number().typeError("That doesn't look like a phone number").positive("A phone number can't start with a minus").integer("A phone number can't include a decimal point").min(8).required('A phone number is required'),
+    password: Yup.string().min(5, 'password to short').required('please enter a password').matches(/[0-9]/, getCharacterValidationError('digit')).matches(/[a-z]/, getCharacterValidationError('lowercase')).matches(/[A-Z]/, getCharacterValidationError('uppercase')),
+})
+
+
+
+
+const Login = () => {
+    const dispatch= useDispatch();
+    const router = useRouter()
+    const handleLogin = async (inputLogin) => {
+
+        try {
+            const res = await axios.post('http://localhost:5000/login', inputLogin)
+
+            // Assuming the server sends a JSON response with a 'msg' property
+            const data = await res.data;
+            //alert message using react hot tost
+            // if(res.status==200){
+            //     router.push('/')
+            //     toast(data.msg, {
+            //         icon: '✅',
+            //         style: {
+            //             borderRadius: '10px',
+            //             background: '#333',
+            //             color: '#fff',
+            //         },
+            //     })
+            // }else{
+            //     toast(data.msg, {
+            //         icon: '❌',
+            //         style: {
+            //             borderRadius: '10px',
+            //             background: '#333',
+            //             color: '#fff',
+            //         },
+            //     })
+            // }
+
+
+            toast(res.status===200? data.msg : data.msg,
+            {
+              icon: res.status===200?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
+
+          if(res.status===200){
+            if(data.userByPhone.role=="Admin"){
+                router.push('/admin')
+            }else{
+                router.push('/')
+            }
+            dispatch(setUserLoginDetails(data))
+          }
+
+        } catch (error) {
+            console.error('Error during login:', error.message);
+            // Handle error, e.g., display an error message to the user
+        }
+    };
+
+
     return (
         <>
+            <Header/>
             <div className='bg-gray-200 text-white p-10 h-screen'>
+
                 <Formik
                     initialValues={{
-                        email:'',
-                        password:''
+                        phone: '',
+                        password: '',
                     }}
 
-                    validate={values => {
-                        const errors = {};
-                        if (!values.email) {
-                            errors.email = 'Required';
-                        } else if (
-                            !/^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i.test(values.email)
-                        ) {
-                            errors.email = 'Invalid email address';
-                        }
-                        return errors;
+                    validationSchema={SigninSchema}
+
+                    onSubmit={(values) => {
+                        handleLogin(values)
                     }}
-                    
                 >
 
-                    {({ isSubmitting }) => (
-                        <Form className='flex flex-col align-middle justify-center text-center max-w-[400px]
-                        bg-gray-50 text-black gap-5 p-5 rounded-lg mx-auto mt-24
-                        '>
+
+                    {({ errors, touched, handleChange }) => (
+                        <Form className='flex flex-col align-middle justify-center text-center max-w-[400px] bg-gray-50 text-black gap-5 p-5 rounded-lg mx-auto mt-24'>
                             <legend className='text-3xl font-semibold'>Login</legend>
-                            <Field className='border p-1 rounded-md' type="email" name="email" placeholder="email" />
-                            <ErrorMessage name="email" className='text-red-600' component="div" />
-                            <Field className='border p-1 rounded-md' type="password" name="password" placeholder="password" />
-                            <ErrorMessage name="password" component="div" />
-                            <button className='bg-gray-700 text-white p-1  rounded-lg ' type="submit" >
-                                Login
-                            </button>
+
+                            <Field className='border p-1 rounded-md' type="number" name="phone" placeholder="enter your phone number" onChange={handleChange} />
+                            {errors.phone && touched.phone ? (
+                                <div className='text-red-600'>{errors.phone}</div>
+                            ) : null}
+
+                            <Field className='border p-1 rounded-md' type="password" name="password" placeholder="password" onChange={handleChange} />
+                            {errors.password && touched.password ? (
+                                <div className='text-red-600'>{errors.password}</div>
+                            ) : null}
+
+                            <Button type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Login</Button>
+
                             <div className='flex justify-between'>
                                 <div>
                                     <p>Forgot Password?</p>
@@ -48,7 +130,7 @@ const Login =() => {
                                 </div>
 
                                 <div>
-                                    <p>Don't have account? </p>
+                                     <p>Don't have account? </p>
                                     <Link href='/register' className='text-blue-600'>Register</Link>
                                 </div>
                             </div>
@@ -61,11 +143,13 @@ const Login =() => {
                                     <FaInstagramSquare className='text-[#C53A8A]' />
                                 </div>
                             </div>
+
                         </Form>
                     )}
 
                 </Formik>
             </div>
+            <Footer/>
         </>
     )
 }

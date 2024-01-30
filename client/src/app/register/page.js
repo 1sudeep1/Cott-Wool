@@ -3,9 +3,12 @@ import { Formik, Form, Field } from 'formik'
 import Link from 'next/link'
 import React from 'react'
 import * as Yup from 'yup'
-import {Button} from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import toast, { Toaster } from 'react-hot-toast';
 import { useRouter } from 'next/navigation'
+import Header from '../components/header/page'
+import Footer from '../components/footer/page'
+import axios from 'axios'
 
 
 const getCharacterValidationError = (str) => {
@@ -27,65 +30,61 @@ const SignupSchema = Yup.object().shape({
 const Register = () => {
 
     const router = useRouter()
-    const handleRegister= async(inputItem)=>{
-        console.log("hello", inputItem)
-
-        try{
-            const res= await fetch('http://localhost:5000/register', {
-                method:'POST',
-                headers:{'content-Type': 'application/json'},
-                body:JSON.stringify(inputItem)
-            })
-
-
-            const data = await res.json() //controller function, response will convert in json
-            console.log('data' ,data)
+    const handleRegister = async (inputItem) => {
+        try {
+            const res = await axios.post('http://localhost:5000/register', inputItem)
+            const data = await res.data //controller function, response will convert in json
 
             //alert message using react hot tost
-            toast(res.status===200? data.msg + '. please login ' : data.msg,
-            {
-              icon: res.status===200?'✅':'❌',
-              style: {
-                borderRadius: '10px',
-                background: '#333',
-                color: '#fff',
-              },
-            }
-          );
+            toast(res.status === 200 ? data.msg + '. please login ' : data.msg,
+                {
+                    icon: res.status === 200 ? '✅' : '❌',
+                    style: {
+                        borderRadius: '10px',
+                        background: '#333',
+                        color: '#fff',
+                    },
+                }
+            );
 
-          if(res.status===200){
-            router.push('/login')
-          }
-        }catch(err){
+            if (res.status === 200) {
+                router.push('/login')
+            }
+        } catch (err) {
             console.log(err)
         }
     }
-    
+
     return (
         <>
-        {/* it displays the alert message from top */}
-        <Toaster />
+            <Header />
+            {/* it displays the alert message from top */}
+            <Toaster />
             <div className='bg-gray-200 py-10'>
                 <div className='max-w-[800px] mx-auto bg-gray-50 p-14 rounded-xl'>
                     <h1 className='text-3xl font-bold text-center'>Register Page</h1>
                     <Formik
-                    
+
                         initialValues={{
-                            firstName:'',
-                            lastName:'',
-                            email:'',
-                            phone:'',
-                            gender:'',
-                            dob:'',
-                            password:'',
-                            confirmPassword:''
+                            
+                            firstName: '',
+                            lastName: '',
+                            email: '',
+                            phone: '',
+                            gender: '',
+                            dob: '',
+                            password: '',
+                            confirmPassword: ''
                         }}
                         validationSchema={SignupSchema}
 
-                        onSubmit={values => {
-                            handleRegister(values)
-                          }}
-                      
+                        onSubmit={(values, { resetForm }) => {
+                            const fullName= `${values.firstName} ${values.lastName}`
+                            const inputData={ ...values, fullName }
+                            handleRegister(inputData)
+                            resetForm();
+                        }}
+
                     >
 
                         {({ errors, touched, handleChange }) => (
@@ -93,14 +92,14 @@ const Register = () => {
                                 <div className='md:flex justify-between items-center gap-5 md:gap-3 my-5'>
                                     <div className='flex flex-col gap-2 w-full'>
                                         <label className='text-xl' htmlFor="firstName">First Name <span className='text-red-600'>*</span></label>
-                                        <Field name='firstName' id='firstName' placeholder='First Name' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
+                                        <Field name='firstName' id='firstName' placeholder='First Name' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                         {errors.firstName && touched.firstName ? (
                                             <div className='text-red-600'>{errors.firstName}</div>
                                         ) : null}
                                     </div>
                                     <div className='flex flex-col gap-2 w-full'>
                                         <label className='text-xl' htmlFor="lastName">Last Name <span className='text-red-600'>*</span></label>
-                                        <Field name='lastName' id='lastName' placeholder='Last Name' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
+                                        <Field name='lastName' id='lastName' placeholder='Last Name' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                         {errors.lastName && touched.lastName ? (
                                             <div className='text-red-600'>{errors.lastName}</div>
                                         ) : null}
@@ -109,7 +108,7 @@ const Register = () => {
 
                                 <div className='flex flex-col gap-2 w-full my-5'>
                                     <label className='text-xl' htmlFor="email">Email <span className='text-red-600'>*</span></label>
-                                    <Field type='email' name='email' id='email' placeholder='Email' className='text-sm p-2 border rounded-lg' onChange={handleChange}  />
+                                    <Field type='email' name='email' id='email' placeholder='Email' className='text-sm p-2 border rounded-lg' onChange={handleChange} />
                                     {errors.email && touched.email ? (
                                         <div className='text-red-600'>{errors.email}</div>
                                     ) : null}
@@ -164,7 +163,7 @@ const Register = () => {
                                     ) : null}
                                 </div>
 
-                                <Button  type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Register</Button> 
+                                <Button type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Register</Button>
 
                                 <p className='text-center my-5'>Already have account? <Link className='text-white bg-blue-700 p-[4px] rounded-lg' href='/login'>Login</Link></p>
                             </Form>
@@ -172,6 +171,7 @@ const Register = () => {
                     </Formik>
                 </div>
             </div>
+            <Footer />
         </>
     )
 }
