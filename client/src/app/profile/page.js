@@ -4,6 +4,7 @@ import NavAdmin from '../components/adminNavbar/page'
 import { useSelector } from 'react-redux'
 import { Image } from "@nextui-org/react";
 import Header from '../components/header/page';
+
 const Profile = () => {
     const { userDetails } = useSelector(state => state.user)
     const {role, fullName, dob, phone, email}= userDetails

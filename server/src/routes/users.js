@@ -1,5 +1,5 @@
 const express = require('express')
-const {registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin}= require('../controllers/users')
+const {registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword}= require('../controllers/users')
 router=express.Router()
 
 //routes for creating new user
@@ -17,5 +17,8 @@ router.put('/users/:id', updateById)
 
 //routes for deleting details with id
 router.delete('/users/:id', deleteById)
+
+//routes for changing password
+router.post('/change-password', changePassword)
 
 module.exports= router
