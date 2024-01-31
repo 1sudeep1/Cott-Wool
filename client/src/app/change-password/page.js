@@ -17,7 +17,6 @@ const getCharacterValidationError = (str) => {
 
 
 const changePasswordSchema = Yup.object().shape({
-  phone: Yup.number().typeError("That doesn't look like a phone number").positive("A phone number can't start with a minus").integer("A phone number can't include a decimal point").min(8).required('A phone number is required'),
   currentPassword: Yup.string().min(5, 'password to short').required('please enter a current password').matches(/[0-9]/, getCharacterValidationError('digit')).matches(/[a-z]/, getCharacterValidationError('lowercase')).matches(/[A-Z]/, getCharacterValidationError('uppercase')),
   password: Yup.string().min(5, 'password to short').required('please enter a new password').matches(/[0-9]/, getCharacterValidationError('digit')).matches(/[a-z]/, getCharacterValidationError('lowercase')).matches(/[A-Z]/, getCharacterValidationError('uppercase')),
   confirmPassword: Yup.string().required('please retype your new password').oneOf([Yup.ref('password')], "password doesnot match")
@@ -26,7 +25,7 @@ const ChangePassword = () => {
   const dispatch= useDispatch()
   const router= useRouter()
   const { userDetails } = useSelector(state => state.user)
-  const { role} = userDetails
+  const { role, _id} = userDetails
 
   const handleChangePassword = async (inputChanges) => {
     try {
@@ -57,12 +56,11 @@ const ChangePassword = () => {
 
   return (
     <>
+
       {role == "Admin" ? <NavAdmin /> : <Header />}
       <div className='bg-gray-200 text-white p-10 h-screen'>
-
         <Formik
           initialValues={{
-            phone: '',
             currentPassword: '',
             password: '',
             confirmPassword: ''
@@ -71,6 +69,8 @@ const ChangePassword = () => {
           validationSchema={changePasswordSchema}
 
           onSubmit={(values) => {
+            
+            values.id= _id
             handleChangePassword(values)
           }}
         >
@@ -78,11 +78,6 @@ const ChangePassword = () => {
           {({ errors, touched, handleChange }) => (
             <Form className='flex flex-col align-middle justify-center text-center max-w-[400px] bg-gray-50 text-black gap-5 p-5 rounded-lg mx-auto mt-24'>
               <legend className='text-3xl font-semibold'>Change Password</legend>
-
-              <Field className='border p-1 rounded-md' type="number" name="phone" placeholder="enter your phone number" onChange={handleChange} />
-              {errors.phone && touched.phone ? (
-                <div className='text-red-600'>{errors.phone}</div>
-              ) : null}
 
               <Field className='border p-1 rounded-md' type="password" name="currentPassword" placeholder="current password" onChange={handleChange} />
               {errors.currentPassword && touched.currentPassword ? (
