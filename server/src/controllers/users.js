@@ -112,18 +112,18 @@ const userLogin = async (req, res) => {
 
 const changePassword = async (req, res) => {
   try {
-    const userByPhone = await User.findOne({ phone: req.body.phone });
+    const userById = await User.findOne({ _id: req.body.id });
 
-    if (!userByPhone) {
-      return res.json({ msg: 'Invalid phone', status:false });
+    if (!userById) {
+      return res.json({ msg: 'No user found', status:false });
     }
 
-    const passwordMatch = await bcrypt.compare(req.body.currentPassword, userByPhone.password);
+    const passwordMatch = await bcrypt.compare(req.body.currentPassword, userById.password);
 
     if (passwordMatch) {
       const hashPassword = await bcrypt.hash(req.body.password, saltRounds);
-      userByPhone.password = hashPassword;
-      await userByPhone.save();
+      userById.password = hashPassword;
+      await userById.save();
       res.json({ msg: 'Password changed successfully', status:true });
     } else {
       res.json({ msg: 'Current password did not match', status:false });

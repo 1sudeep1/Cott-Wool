@@ -15,6 +15,35 @@ const addProducts = async (req, res) => {
     }
 }
 
+const getAllProducts = async (req, res) => {
+    try {
+        const allProducts=await Products.find()
+        res.json({msg: 'products fetched successfully', allProducts})
+
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
-module.exports = { addProducts }
+const deleteProduct = async (req, res) => {
+    try {
+        const deleteProductData=await Products.findByIdAndDelete(req.params.id)
+        if (deleteProductData) {
+            res.json({ msg: 'product deleted successfully.' })
+          }else{
+            res.json({ msg: 'product deletion failed' })
+          }
+
+    } catch (err) {
+        console.log(err)
+    }
+}
+
+
+
+
+
+
+
+module.exports = { addProducts, getAllProducts, deleteProduct }
