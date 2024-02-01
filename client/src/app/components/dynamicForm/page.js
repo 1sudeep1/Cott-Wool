@@ -47,7 +47,7 @@ const DynamicForm = (props) => {
         try {
             const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`, inputProduct)
             const data = await res.data;
-            toast(res.status===200? data.msg+'Add more products' : data.msg,
+            toast(res.status===200? data.msg+' Add more products' : data.msg,
                 {
                   icon: res.status===200?'✅':'❌',
                   style: {

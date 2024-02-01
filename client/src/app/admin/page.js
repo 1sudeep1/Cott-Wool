@@ -11,6 +11,7 @@ import Customers from './customers/page';
 import { Pagination } from "@nextui-org/react";
 import NavAdmin from '../components/adminNavbar/page'
 import axios from 'axios';
+import AllProducts from './allProducts/page';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -56,6 +57,9 @@ const Admin = () => {
   const [users, setUsers] = useState([]);
   const [count, setCount] = useState(0)
 
+  const [products, setProducts]= useState([])
+  
+
   const fetchAllusers = async (page = 1) => {
     const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/users?page=${page}`)
     const data = await res.data
@@ -64,8 +68,19 @@ const Admin = () => {
 
   }
 
+  const fetchAllProducts= async ()=>{
+    const res= await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`)
+    const data=await res.data
+    setProducts(data.allProducts)
+  }
+
+  // const deleteProducts= async()=>{
+  //   const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products/`)
+  // }
+
   useEffect(() => {
     fetchAllusers()
+    fetchAllProducts()
   }, [])
 
   return (
@@ -110,7 +125,7 @@ const Admin = () => {
         </TabPanel>
 
         <TabPanel value={value} index={4}>
-          All Products
+          <AllProducts allProducts={products}/>
         </TabPanel>
       </Box>
     </>
