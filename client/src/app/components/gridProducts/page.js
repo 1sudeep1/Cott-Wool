@@ -17,7 +17,6 @@ const GridProducts = (props) => {
     const deleteProduct= async()=>{
         try{
             const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`)
-            window.location.reload();
             const data= await res.data
             toast(res.status===200? data.msg : data.msg,
                 {

@@ -3,7 +3,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image } from "@nextui-org/react";
 import Link from "next/link";
 
 const AuthButtons = () => {
@@ -30,13 +30,14 @@ const NavAdmin = () => {
     }
     return (
       <>
-        <Navbar>
-          <NavbarBrand>
-            <p className="font-bold text-inherit"> <Link href="/">COTT-WOOL</Link></p>
-          </NavbarBrand>
+        <Navbar className="bg-white border-b">
+        <NavbarBrand as={Link} href="/">
+          <Image src='/logo.png' width={63} height={63} />
+          <p className="font-bold text-inherit text-[#3D550C] text-lg"> COTT-WOOL</p>
+        </NavbarBrand>
   
           <NavbarContent className="hidden sm:flex gap-4" justify="center">
-            <h1>Welcome to Admin Panel</h1>
+            <h1 className='font-semibold'>Welcome to Admin Panel</h1>
           </NavbarContent>
   
           <NavbarContent justify="end">
