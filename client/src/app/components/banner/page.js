@@ -23,9 +23,8 @@ const Banner = () => {
                 className="mySwiper"
             >
                 {bannerData.map((item) => (
-                    <SwiperSlide><Image className="w-[1400px] h-[35rem] " src={item.bannerImage} /></SwiperSlide>
+                    <SwiperSlide><Image className="w-[1400px] h-[10rem] lg:h-[35rem] " src={item.bannerImage} /></SwiperSlide>
                 ))}
-
             </Swiper>
         </>
     )

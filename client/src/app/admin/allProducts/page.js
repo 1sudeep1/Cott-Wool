@@ -1,4 +1,4 @@
-import GridProducts from '@/app/components/gridProducts/page'
+import GridProducts from '@/app/components/gridProductsAdmin/page'
 import React from 'react'
 
 const AllProducts = (props) => {

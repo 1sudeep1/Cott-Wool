@@ -1,14 +1,28 @@
 'use client'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './components/header/page'
 import Footer from './components/footer/page'
 import Banner from './components/banner/page';
+import axios from 'axios';
+import GridProductsHome from './components/gridProductsHome/page';
 
 const Home = () => {
+  const [products, setProducts]= useState([])
+  const fetchAllProducts= async ()=>{
+    const res= await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`)
+    const data=await res.data
+    setProducts(data.allProducts)
+  }
+
+  useEffect(() => {
+    fetchAllProducts()
+  }, [])
+
   return (
     <>
       <Header />
       <Banner />
+      <GridProductsHome allProducts={products} />
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
