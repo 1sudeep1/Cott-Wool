@@ -119,7 +119,7 @@ const Login = () => {
                                 <div className='text-red-600'>{errors.password}</div>
                             ) : null}
 
-                            <Button type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Login</Button>
+                            <Button type='submit' color="primary" className='border p-2 rounded-lg bg-[#3D550C] text-white'>Login</Button>
 
                             <div className='flex justify-between'>
                                 <div>

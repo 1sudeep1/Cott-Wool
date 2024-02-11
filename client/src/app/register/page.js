@@ -163,9 +163,9 @@ const Register = () => {
                                     ) : null}
                                 </div>
 
-                                <Button type='submit' color="primary" className='border p-2 rounded-lg bg-gray-500 text-white'>Register</Button>
+                                <Button type='submit' color="primary" className='border p-2 rounded-lg bg-[#3D550C] text-white'>Register</Button>
 
-                                <p className='text-center my-5'>Already have account? <Link className='text-white bg-blue-700 p-[4px] rounded-lg' href='/login'>Login</Link></p>
+                                <p className='text-center my-5'>Already have account? <Link className='text-white bg-[#3D550C] p-[4px] rounded-lg' href='/login'>Login</Link></p>
                             </Form>
                         )}
                     </Formik>

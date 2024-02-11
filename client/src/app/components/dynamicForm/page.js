@@ -154,7 +154,7 @@ const DynamicForm = (props) => {
                                 </div>
                             ))}
 
-                            <Button type='submit' className='bg-slate-400 p-1 rounded-md'>{props.button}</Button>
+                            <Button type='submit' className='bg-[#3D550C] text-white p-1 rounded-md'>{props.button}</Button>
                         </div>
                     </Form>
                 )}

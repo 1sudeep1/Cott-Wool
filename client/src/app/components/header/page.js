@@ -3,22 +3,25 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input} from "@nextui-org/react";
 import Link from 'next/link';
+import { FaHeart, FaShoppingCart, FaSearch } from "react-icons/fa";
 
 const navBarConfig = {
-  true: [{ 'label': 'About Us', 'href': '/about' }, { 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
-  false: [{ 'label': 'Features', 'href': '/features' }, { 'label': 'Customers', 'href': '/customers' }]
+  true: [{ 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
+  false: [{ 'label': 'About Us', 'href': '/about' }, { 'label': 'Features', 'href': '/features' }]
 }
 
 const AuthButtons = () => {
   return (
     <div className='flex items-center gap-4'>
-      <NavbarItem className="hidden lg:flex">
-        <Link href="/login">Login</Link>
+      <NavbarItem className="hidden lg:flex font-semibold">
+        <Button title="login" className="font-semibold" as={Link} color="primary" href="/login" variant="flat">
+          Login
+        </Button>
       </NavbarItem>
-      <NavbarItem className="hidden lg:flex">
-        <Button as={Link} color="primary" href="/register" variant="flat">
+      <NavbarItem className="hidden lg:flex ">
+        <Button title="sign up" className="font-semibold" as={Link} color="primary" href="/register" variant="flat">
           Sign Up
         </Button>
       </NavbarItem>
@@ -36,9 +39,10 @@ const Header = () => {
   }
   return (
     <>
-      <Navbar>
-        <NavbarBrand>
-          <p className="font-bold text-inherit"> <Link href="/">COTT-WOOL</Link></p>
+      <Navbar className="bg-white">
+        <NavbarBrand as={Link} href="/">
+          <Image src='/logo.png' width={63} height={63} />
+          <p className="font-bold text-inherit text-[#3D550C] text-lg"> COTT-WOOL</p>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
 
@@ -47,7 +51,7 @@ const Header = () => {
               <>
                 {navBarConfig[isLoggedIn].map((item, id) => {
                   return (<NavbarItem key={id} >
-                    <Link color="foreground" href={item.href}>
+                    <Link className='font-semibold' color="foreground" href={item.href}>
                       {item.label}
                     </Link>
                   </NavbarItem>)
@@ -57,16 +61,40 @@ const Header = () => {
               <>
                 {navBarConfig[isLoggedIn].map((item, id) => {
                   return (<NavbarItem key={id} >
-                    <Link color="foreground" href={item.href}>
+                    <Link className='font-semibold' color="foreground" href={item.href}>
                       {item.label}
                     </Link>
                   </NavbarItem>)
                 })}
               </>
           }
+          <NavbarItem>
+            <Input
+              classNames={{
+                base: "max-w-full h-10",
+                mainWrapper: "h-full",
+                input: "text-small",
+                inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
+
+              }}
+              placeholder="Type to search products..."
+              size="sm"
+              type="search"
+              startContent={<FaSearch />}
+              className="border rounded-2xl text-gray-400"
+            />
+          </NavbarItem>
 
         </NavbarContent>
+
+
         <NavbarContent justify="end">
+          <NavbarItem>
+            <FaHeart className='text-xl' title='wishlist' />
+          </NavbarItem>
+          <NavbarItem>
+            <FaShoppingCart className='text-xl' title='cart' />
+          </NavbarItem>
 
           <NavbarItem>
             {isLoggedIn ?

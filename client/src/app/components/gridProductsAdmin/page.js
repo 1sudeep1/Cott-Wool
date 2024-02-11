@@ -1,5 +1,4 @@
 import { Button } from '@nextui-org/react';
-import { data } from 'autoprefixer';
 import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
@@ -17,7 +16,6 @@ const GridProducts = (props) => {
     const deleteProduct= async()=>{
         try{
             const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`)
-            window.location.reload();
             const data= await res.data
             toast(res.status===200? data.msg : data.msg,
                 {
@@ -65,6 +63,7 @@ const GridProducts = (props) => {
                                         <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{item.productCategory}</h3>
                                         <h2 className="text-gray-900 title-font text-lg font-medium">{item.productName}</h2>
                                         <p className="mt-1">{item.productPrice}</p>
+                                        
                                         <div className="flex justify-between">
                                             <Button className='text-blue-700'>Edit</Button>
                                             <Button onClick={(e)=>handleDelete(item._id)} className='text-red-600'>Delete</Button>
