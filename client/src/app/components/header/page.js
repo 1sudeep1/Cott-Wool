@@ -3,7 +3,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input, SearchIcon } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input} from "@nextui-org/react";
 import Link from 'next/link';
 import { FaHeart, FaShoppingCart, FaSearch } from "react-icons/fa";
 
