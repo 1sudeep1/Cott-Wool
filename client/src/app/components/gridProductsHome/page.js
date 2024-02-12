@@ -1,12 +1,18 @@
+import { useRouter } from 'next/navigation';
 import React from 'react';
 
 const GridProductsHome = (props) => {
+    const router= useRouter()
     const allProducts = props.allProducts;
 
     // Convert buffer to Data URL
     const bufferToDataURL = (buffer, mimeType) => {
         return `data:${mimeType};base64,${Buffer.from(buffer).toString('base64')}`;
     };
+
+    const handleProduct=(id)=>{
+        router.push(`/product-details/${id}`)
+    }
 
 
     return (
@@ -24,7 +30,7 @@ const GridProductsHome = (props) => {
                             }
 
                             return (
-                                <div className="p-4 w-[200px] h-64 shadow-lg" key={item._id}>
+                                <div className="p-4 w-[200px] h-64 shadow-lg cursor-pointer" key={item._id} onClick={()=>handleProduct(item._id)} >
                                     <a className="block relative h-30 rounded overflow-hidden">
                                         <img alt="ecommerce" className="object-cover object-center w-full h-full block" src={imageSrc} />
                                     </a>
