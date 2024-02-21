@@ -50,7 +50,8 @@ const NavAdmin = () => {
                         as="button"
                         avatarProps={{
                           isBordered: true,
-                          src: "https://as1.ftcdn.net/v2/jpg/05/60/26/08/1000_F_560260880_O1V3Qm2cNO5HWjN66mBh2NrlPHNHOUxW.jpg",
+                          src:`http://localhost:5000/profile/${userDetails._id}`,
+                          alt:'profile pic'
                         }}
   
                       />

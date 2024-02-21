@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState} from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input} from "@nextui-org/react";
 import Link from 'next/link';
 import { FaHeart, FaShoppingCart, FaSearch } from "react-icons/fa";
+import axios from 'axios';
 
 const navBarConfig = {
   true: [{ 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
@@ -30,6 +31,7 @@ const AuthButtons = () => {
 }
 
 const Header = () => {
+  const [profileDir, setProfileDir]= useState(null)
   const router = useRouter()
   const { userDetails, isLoggedIn } = useSelector((state, actions) => state.user)
   const dispatch = useDispatch()
@@ -37,6 +39,9 @@ const Header = () => {
     router.push('/login')
     dispatch(setLogout())
   }
+
+
+
   return (
     <>
       <Navbar className="bg-white">
@@ -105,9 +110,9 @@ const Header = () => {
                       as="button"
                       avatarProps={{
                         isBordered: true,
-                        src: "https://as1.ftcdn.net/v2/jpg/05/60/26/08/1000_F_560260880_O1V3Qm2cNO5HWjN66mBh2NrlPHNHOUxW.jpg",
+                        src:`http://localhost:5000/profile/${userDetails._id}`,
+                        alt:'profile pic'
                       }}
-
                     />
                   </DropdownTrigger>
                   <DropdownMenu aria-label="User Actions" variant="flat" className='bg-gray-400 text-white'>

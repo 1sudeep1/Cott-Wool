@@ -1,7 +1,7 @@
 'use client'
 import { Formik, Form, Field } from 'formik'
 import Link from 'next/link'
-import React from 'react'
+import React, { useRef } from 'react'; 
 import * as Yup from 'yup'
 import { Button } from "@nextui-org/react";
 import toast, { Toaster } from 'react-hot-toast';
@@ -23,16 +23,22 @@ const SignupSchema = Yup.object().shape({
     gender: Yup.string().required('Gender is required'),
     dob: Yup.date().max(new Date(Date.now() - 567648000000)).required('date of birth is required'),
     password: Yup.string().min(5, 'password to short').required('please enter a password').matches(/[0-9]/, getCharacterValidationError('digit')).matches(/[a-z]/, getCharacterValidationError('lowercase')).matches(/[A-Z]/, getCharacterValidationError('uppercase')),
-    confirmPassword: Yup.string().required('please retype your password').oneOf([Yup.ref('password')], "password doesnot match")
+    confirmPassword: Yup.string().required('please retype your password').oneOf([Yup.ref('password')], "password doesnot match"),
+    profile:Yup.string()
 })
 
 
 const Register = () => {
-
+    const inputRef= useRef(null)
     const router = useRouter()
     const handleRegister = async (inputItem) => {
         try {
-            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/register`, inputItem)
+            const formData= new FormData();
+            formData.append('profile', inputRef.current.files[0])
+           for(let item in inputItem){
+            formData.append(item, inputItem[item])
+           }
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/register`, formData)
             const data = await res.data //controller function, response will convert in json
 
             //alert message using react hot tost
@@ -55,6 +61,8 @@ const Register = () => {
         }
     }
 
+
+
     return (
         <>
             <Header />
@@ -74,7 +82,8 @@ const Register = () => {
                             gender: '',
                             dob: '',
                             password: '',
-                            confirmPassword: ''
+                            confirmPassword: '',
+                            profile:''
                         }}
                         validationSchema={SignupSchema}
 
@@ -161,6 +170,12 @@ const Register = () => {
                                     {errors.confirmPassword && touched.confirmPassword ? (
                                         <div className='text-red-600'>{errors.confirmPassword}</div>
                                     ) : null}
+                                </div>
+
+
+                                <div className='flex flex-col gap-2 w-full my-5'>
+                                    <label className='text-xl' htmlFor="profile">Profile</label>
+                                    <Field innerRef={inputRef} type='file' name='profile' id='profile' className='text-sm p-2 border rounded-lg'/>
                                 </div>
 
                                 <Button type='submit' color="primary" className='border p-2 rounded-lg bg-[#3D550C] text-white'>Register</Button>

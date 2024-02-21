@@ -26,7 +26,7 @@ const page = ({ params }) => {
               <h1 className='text-3xl'>{productDetails.productName}</h1>
               <p>{productDetails.productDescription}</p>
               <p className='text-xl'>Rs. {productDetails.productPrice}</p>
-              <Button>Add to Cart</Button>
+              <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5'>Add to Cart</Button>
             </div>
           </div>
       </section>
