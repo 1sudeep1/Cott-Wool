@@ -1,9 +1,26 @@
 const express = require('express')
-const {registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword}= require('../controllers/users')
+const {registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword, getUserProfilePic}= require('../controllers/users')
 router=express.Router()
+const multer  = require('multer')
+
+const storage = multer.diskStorage({
+    destination: function (req, file, cb) {
+      cb(null, 'uploads/profilePic')
+    },
+    filename: function (req, file, cb) {
+      cb(null, Date.now()+file.originalname)
+    }
+  })
+  
+  const upload = multer({ storage: storage })
+
+//test is a middleware first test will call after that registerNewUser will call
 
 //routes for creating new user
-router.post('/register', registerNewUser)
+router.post('/register', upload.single('profile'), registerNewUser)
+
+//router for getting user profile pic
+router.get('/profile/:id', getUserProfilePic)
 
 //routes for getting all users
 router.get('/users', getAllUsers)

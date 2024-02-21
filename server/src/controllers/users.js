@@ -17,11 +17,31 @@ const registerNewUser = async (req, res) => {
     } else {
       const hashPassword = await bcrypt.hash(req.body.password, saltRounds)
       req.body.password = hashPassword;
+      if(req.file){
+        req.body.profilePic=req.file.filename;
+      }
+      
       await User.create(req.body)
       res.send({ msg: 'user registered successfully' })
     }
   } catch (err) {
     console.log(err)
+  }
+}
+
+const path= require('path')
+const getUserProfilePic= async(req, res)=>{
+  try{
+    const userDetails= await User.findById(req.params.id)
+    if(userDetails.profilePic){
+      return res.sendFile(path.join(__dirname, '../../', 'uploads/profilePic', userDetails.profilePic))
+    }else{
+      return res.sendFile(path.join(__dirname, '../../', 'uploads/profilePic', 'default.jpg'))
+    }
+   
+  }catch(err){
+    console.log(err)
+    res.json({msg:'Failed to get user profile'})
   }
 }
 
@@ -134,4 +154,4 @@ const changePassword = async (req, res) => {
   }
 };
 
-module.exports = { registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword }
+module.exports = { registerNewUser, getAllUsers, getUserPhonePassword, updateById, deleteById, userLogin, changePassword, getUserProfilePic }

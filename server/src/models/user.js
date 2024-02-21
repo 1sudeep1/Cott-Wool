@@ -8,7 +8,8 @@ const userSchema = new Schema({
   gender: String,
   dob:Date,
   password:String,
-  role:{type:String, enum:['User', 'Admin'], default:'User'}
+  role:{type:String, enum:['User', 'Admin'], default:'User'},
+  profilePic:String
 });
 
 const User = mongoose.model('User', userSchema);
