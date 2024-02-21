@@ -51,6 +51,7 @@ const NavAdmin = () => {
                         avatarProps={{
                           isBordered: true,
                           src:`http://localhost:5000/profile/${userDetails._id}`,
+                          // src:`http://localhost:5000/uploads/profilePic/${userDetails.profilePic}`,
                           alt:'profile pic'
                         }}
   
