@@ -1,14 +1,20 @@
-import React, { useEffect, useState } from 'react'
+'use client'
+import React, { useEffect, useRef, useState } from 'react'
 import { Formik, Form, Field } from 'formik';
-import { Button, Textarea, Select, SelectItem } from "@nextui-org/react";
+import { Button, Textarea, Select, SelectItem, Input } from "@nextui-org/react";
 import CreatableSelect from 'react-select/creatable';
 import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const DynamicForm = (props) => {
-
+    const fileInputRefs = useRef([]);
+    const inputRef= useRef(null)
     const initialFieldValues = {};
-    props.fieldList.map((item) => (initialFieldValues[item.name] = ''));
+    props.fieldList.map((item) =>{
+        return (
+                initialFieldValues[item.name] = ''
+                )
+    })
 
     const [category, setCategory] = useState([])
 
@@ -21,8 +27,6 @@ const DynamicForm = (props) => {
     useEffect(() => {
         fetchCategory()
     }, [])
-
-
 
 
     const handleCategory = async (inputCategory) => {
@@ -43,9 +47,22 @@ const DynamicForm = (props) => {
             console.log(err)
         }
     }
+    
+
     const handleProduct = async (inputProduct) => {
         try {
-            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`, inputProduct)
+            const formData= new FormData();
+            fileInputRefs.current.forEach((fileInputRef, index) => {
+                if (fileInputRef.current.files[0]) {
+                    formData.append(`productImage${index}`, fileInputRef.current.files[0]);
+                }
+            });
+            // formData.append('productImage', inputRef.current.files[0])
+    
+            for (let item in inputProduct) {
+                formData.append(item, inputProduct[item]);
+            }
+            const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products`, formData)
             const data = await res.data;
             toast(res.status===200? data.msg+' Add more products' : data.msg,
                 {
@@ -74,7 +91,6 @@ const DynamicForm = (props) => {
                         await handleCategory(values);
                     }
                     resetForm()
-                    console.log('suman', values)
                 }}
 
             >
@@ -84,7 +100,7 @@ const DynamicForm = (props) => {
                             {props.fieldList.map((item) => (
                                 <div className='flex items-center gap-2 justify-between' key={item.fieldName}>
                                     <label htmlFor={item.name}>{item.fieldName}</label>
-                                    <Field type={item.type} name={item.name} id={item.name} placeholder={item.placeholder} className='border p-1 rounded-md' onChange={formikProps.handleChange} />
+                                    <Field innerRef={inputRef} type={item.type} name={item.name} id={item.name} placeholder={item.placeholder} className='border p-1 rounded-md' onChange={formikProps.handleChange} />
                                 </div>
                             ))}
 

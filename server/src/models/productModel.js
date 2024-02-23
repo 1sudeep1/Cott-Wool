@@ -3,7 +3,7 @@ const { Schema } = mongoose;
 
 const productModelSchema = new Schema({ 
   productName: String,// String is shorthand for {type: String}
-  productImage:Buffer,
+  productImage:String,
   productPrice:Number,
   productDescription:String,
   productCategory:String,

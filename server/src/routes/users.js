@@ -16,7 +16,7 @@ const storage = multer.diskStorage({
 
 //test is a middleware first test will call after that registerNewUser will call
 
-//routes for creating new user
+//routes for creating new user multer
 router.post('/register', upload.single('profile'), registerNewUser)
 
 //router for getting user profile pic
