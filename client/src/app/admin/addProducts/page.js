@@ -5,8 +5,8 @@ const AddProducts = () => {
     <>
       <DynamicForm formTitle='Add Products' fieldList={[
         { fieldName: "Product Name",type:'text', placeholder: 'enter product name', name: 'productName'},
-        { fieldName: "Product Image",type:'file',  name: 'productImage'},
-        { fieldName: "Product Price",type:'number',  name: 'productPrice', placeholder:'enter product price'},
+        { fieldName: "Product Image",type:'file', name: 'productImage'},
+        { fieldName: "Product Price",type:'number', name: 'productPrice', placeholder:'enter product price'},
       ]}
       textArea={[{fieldName:'Product Description', name:'productDescription', placeholder:'enter product description'}]}
       chooseCategory={[{fieldName:'Choose Category', placeholder:'select category', name:'productCategory'}]}

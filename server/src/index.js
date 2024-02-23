@@ -17,6 +17,9 @@ const connection=require('./db/connection')
 // to parse req.body to plain object/json
 app.use(express.json())
 
+//it make the uploads folder public. so that we can directly access it by url http://localhost:5000/uploads/profilePic/default.jpg
+app.use('/uploads',express.static('uploads'))
+
 //The CORS Policy Enables Cross-origin resource sharing (CORS) in Express Gateway. CORS defines a way in which a browser and server can interact and determine whether or not it is safe to allow a cross-origin request.
 app.use(cors())
 
