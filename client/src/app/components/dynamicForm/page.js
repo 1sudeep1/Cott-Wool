@@ -7,7 +7,6 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const DynamicForm = (props) => {
-    const fileInputRefs = useRef([]);
     const inputRef= useRef(null)
     const initialFieldValues = {};
     props.fieldList.map((item) =>{
@@ -52,12 +51,7 @@ const DynamicForm = (props) => {
     const handleProduct = async (inputProduct) => {
         try {
             const formData= new FormData();
-            fileInputRefs.current.forEach((fileInputRef, index) => {
-                if (fileInputRef.current.files[0]) {
-                    formData.append(`productImage${index}`, fileInputRef.current.files[0]);
-                }
-            });
-            // formData.append('productImage', inputRef.current.files[0])
+            formData.append('productImage', inputRef.current.files[0])
     
             for (let item in inputProduct) {
                 formData.append(item, inputProduct[item]);
@@ -100,7 +94,12 @@ const DynamicForm = (props) => {
                             {props.fieldList.map((item) => (
                                 <div className='flex items-center gap-2 justify-between' key={item.fieldName}>
                                     <label htmlFor={item.name}>{item.fieldName}</label>
-                                    <Field innerRef={inputRef} type={item.type} name={item.name} id={item.name} placeholder={item.placeholder} className='border p-1 rounded-md' onChange={formikProps.handleChange} />
+                                    {item.type!='file'?
+                                    <Field  type={item.type}  name={item.name} id={item.name} placeholder={item.placeholder} className='border p-1 rounded-md'onChange={formikProps.handleChange} />
+                                    :
+                                    <Field innerRef={inputRef} type={item.type}  name={item.name} id={item.name} placeholder={item.placeholder} className='border p-1 rounded-md' />
+                                    }
+                                
                                 </div>
                             ))}
 

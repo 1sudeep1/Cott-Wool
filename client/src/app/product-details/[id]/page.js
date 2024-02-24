@@ -21,7 +21,7 @@ const page = ({ params }) => {
       <Header />
       <section className='max-w-[1200px] mx-auto'>
           <div className='my-5 flex gap-5'>
-            <Image src={productDetails.productImage} />
+            <Image src={`http://localhost:5000/uploads/products/${productDetails.productImage}`} />
             <div className='leading-10'>
               <h1 className='text-3xl'>{productDetails.productName}</h1>
               <p>{productDetails.productDescription}</p>
