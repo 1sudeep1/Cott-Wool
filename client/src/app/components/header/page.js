@@ -1,16 +1,16 @@
-import React, { useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input} from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input } from "@nextui-org/react";
 import Link from 'next/link';
-import { FaHeart, FaShoppingCart, FaSearch } from "react-icons/fa";
+import { IoCartOutline, IoHeartOutline, IoSearch } from "react-icons/io5";
 import axios from 'axios';
 
 const navBarConfig = {
   true: [{ 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
-  false: [{ 'label': 'About Us', 'href': '/about' }, { 'label': 'Features', 'href': '/features' }]
+  false: [{ 'label': 'About', 'href': '/about' }, { 'label': 'Features', 'href': '/features' }]
 }
 
 const AuthButtons = () => {
@@ -31,7 +31,6 @@ const AuthButtons = () => {
 }
 
 const Header = () => {
-  const [profileDir, setProfileDir]= useState(null)
   const router = useRouter()
   const { userDetails, isLoggedIn } = useSelector((state, actions) => state.user)
   const dispatch = useDispatch()
@@ -40,38 +39,72 @@ const Header = () => {
     dispatch(setLogout())
   }
 
+  const [category, setCategory] = useState([])
 
+  const fetchCategory = async () => {
+    const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
+    const data = await res.data
+    setCategory(data.allCategory)
+  }
+
+  useEffect(() => {
+    fetchCategory()
+  }, [])
 
   return (
     <>
+
       <Navbar className="bg-white">
         <NavbarBrand as={Link} href="/">
           <Image src='/logo.png' width={63} height={63} />
           <p className="font-bold text-inherit text-[#3D550C] text-lg"> COTT-WOOL</p>
         </NavbarBrand>
         <NavbarContent className="hidden sm:flex gap-4" justify="center">
-
           {
             isLoggedIn ?
-              <>
+              <div className='flex justify-between gap-5'>
                 {navBarConfig[isLoggedIn].map((item, id) => {
                   return (<NavbarItem key={id} >
-                    <Link className='font-semibold' color="foreground" href={item.href}>
-                      {item.label}
-                    </Link>
+                    <div>
+                      {item.label == 'Categories' ?
+                        <Dropdown className='bg-white rounded-sm'>
+                          <DropdownTrigger>
+                            <Button
+                              variant="bordered"
+                            >
+                              {item.label}
+                            </Button>
+                          </DropdownTrigger>
+
+                          <DropdownMenu
+                            aria-label="Action event example"
+                          >
+                            {category.map((item, id) => (
+                              <DropdownItem key={id}>
+                                {item.categoryName}
+                              </DropdownItem>
+                            ))}
+                          </DropdownMenu>
+                        </Dropdown>
+                        :
+                        <Link color="foreground" href={item.href}>
+                          {item.label}
+                        </Link>
+                      }
+                    </div>
                   </NavbarItem>)
                 })}
-              </>
+              </div>
               :
-              <>
-                {navBarConfig[isLoggedIn].map((item, id) => {
-                  return (<NavbarItem key={id} >
-                    <Link className='font-semibold' color="foreground" href={item.href}>
-                      {item.label}
-                    </Link>
-                  </NavbarItem>)
-                })}
-              </>
+              <div className='flex justify-between gap-5'>
+                {navBarConfig[isLoggedIn].map((item, id) =>
+                  <Link key={id} color="foreground" href={item.href}>
+                    {item.label}
+                  </Link>
+
+                )}
+
+              </div>
           }
           <NavbarItem>
             <Input
@@ -85,7 +118,7 @@ const Header = () => {
               placeholder="Type to search products..."
               size="sm"
               type="search"
-              startContent={<FaSearch />}
+              startContent={<IoSearch className='text-xl' />}
               className="border rounded-2xl text-gray-400"
             />
           </NavbarItem>
@@ -95,10 +128,10 @@ const Header = () => {
 
         <NavbarContent justify="end">
           <NavbarItem>
-            <FaHeart className='text-xl' title='wishlist' />
+            <IoHeartOutline className='text-3xl' title='wishlist' />
           </NavbarItem>
           <NavbarItem>
-            <FaShoppingCart className='text-xl' title='cart' />
+            <IoCartOutline className='text-3xl' title='cart' />
           </NavbarItem>
 
           <NavbarItem>
@@ -110,9 +143,9 @@ const Header = () => {
                       as="button"
                       avatarProps={{
                         isBordered: true,
-                        src:`http://localhost:5000/profile/${userDetails._id}`,
+                        src: `http://localhost:5000/profile/${userDetails._id}`,
                         // src:`http://localhost:5000/uploads/profilePic/${userDetails.profilePic}`,
-                        alt:'profile pic'
+                        alt: 'profile pic'
                       }}
                     />
                   </DropdownTrigger>

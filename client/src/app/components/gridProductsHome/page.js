@@ -18,20 +18,22 @@ const GridProductsHome = (props) => {
                         try {
 
                             return (
-                                <div className="p-4 w-[200px] h-80 shadow-lg cursor-pointer flex flex-col justify-center items-center" key={item._id} onClick={()=>handleProduct(item._id)} >
-                                    <Image
-                                        width={150}
-                                        alt="product image"
-                                        src={`http://localhost:5000/uploads/products/${item.productImage}`}
-                                    />
-                                    <div className="mt-4">
-                                        <h3 className="text-gray-500 text-xs tracking-widest title-font mb-1">{item.productCategory}</h3>
-                                        <h2 className="text-gray-900 title-font text-lg font-medium">{item.productName}</h2>
-                                        <p className="mt-1">Rs. {item.productPrice}</p>
-                                        <div className="flex justify-between text-white text-sm gap-5">
+                                <div className="p-4 w-[200px] h-auto shadow-lg cursor-pointer flex flex-col items-center justify-between" key={item._id} onClick={()=>handleProduct(item._id)} >
+                                    <div>
+                                        <Image
+                                            width={150}
+                                            alt="product image"
+                                            src={`http://localhost:5000/uploads/products/${item.productImage}`}
+                                        />
+                                        <div className="">
+                                            <h3 className="text-gray-500 text-xs tracking-widest title-font">{item.productCategory}</h3>
+                                            <h2 className="text-gray-900 title-font text-lg font-medium">{item.productName}</h2>
+                                            <p className="">Rs. {item.productPrice}</p>
+                                        </div>
+                                    </div>
+                                    <div className=" text-white text-sm flex justify-between gap-5">
                                             <Button className='bg-[#3D550C] px-1 rounded-sm'>Add to cart</Button>
                                             <Button className='bg-[#3D550C] px-1 rounded-sm'>wishlist</Button>
-                                        </div>
                                     </div>
                                 </div>
                             );
