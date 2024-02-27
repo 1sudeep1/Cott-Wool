@@ -13,10 +13,9 @@ const GridProductsHome = (props) => {
     return (
         <section className="text-gray-600 body-font bg-white mt-10">
             <div className="container mx-auto">
-                <div className="flex flex-wrap gap-2 justify-around">
+                <div className="flex flex-wrap gap-2">
                     {allProducts.map((item) => {
                         try {
-
                             return (
                                 <div className="p-4 w-[200px] h-auto shadow-lg cursor-pointer flex flex-col items-center justify-between" key={item._id} onClick={()=>handleProduct(item._id)} >
                                     <div>

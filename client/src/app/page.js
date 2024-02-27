@@ -5,6 +5,7 @@ import Footer from './components/footer/page'
 import Banner from './components/banner/page';
 import axios from 'axios';
 import GridProductsHome from './components/gridProductsHome/page';
+import ProductByCategory from './components/productByCategory/page';
 
 const Home = () => {
   const [products, setProducts]= useState([])
@@ -23,6 +24,9 @@ const Home = () => {
       <Header />
       <Banner />
       <GridProductsHome allProducts={products} />
+      <ProductByCategory categoryTitle='Electronics' />
+      <ProductByCategory categoryTitle='Clothes' />
+      <ProductByCategory categoryTitle='Home Appliance' />
       <section className="text-gray-600 body-font">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-col text-center w-full mb-20">
