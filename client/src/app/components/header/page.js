@@ -81,7 +81,7 @@ const Header = () => {
                           >
                             {category.map((item, id) => (
                               <DropdownItem key={id}>
-                                {item.categoryName}
+                                <Link href={`category-product/${item.categoryName}`}>{item.categoryName}</Link>
                               </DropdownItem>
                             ))}
                           </DropdownMenu>
