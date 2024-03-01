@@ -32,9 +32,9 @@ const DynamicForm = (props) => {
         try {
             const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`, inputCategory)
             const data = await res.data;
-            toast(res.status===200? data.msg+'Add more categories' : data.msg,
+            toast(res.check? data.msg+'Add more categories' : data.msg,
             {
-              icon: res.status===200?'✅':'❌',
+              icon: res.check?'✅':'❌',
               style: {
                 borderRadius: '10px',
                 background: '#333',
