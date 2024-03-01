@@ -7,8 +7,13 @@ const jwt = require('jsonwebtoken');
 
 const addCategory = async (req, res) => {
     try {
-        await Category.create(req.body)
-        res.json({ msg: 'category added successfully' })
+        const existingCategory= await Category.findOne({categoryName:req.body.categoryName})
+        if(existingCategory){
+          res.json({msg:'category already exist', check:false})
+        }else{
+          await Category.create(req.body)
+          res.json({ msg: 'category added successfully', check:true })
+        }
 
     } catch (err) {
         console.log(err)
