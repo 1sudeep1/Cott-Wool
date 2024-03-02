@@ -1,7 +1,10 @@
 import { useRouter } from 'next/navigation';
 import React from 'react';
 import { Button, Image} from "@nextui-org/react";
+import { setCartItems } from '@/app/redux/reducerSlices/cartSlice';
+import { useDispatch } from 'react-redux';
 const GridProductsHome = (props) => {
+    const dispatch= useDispatch()
     const router= useRouter()
     const allProducts = props.allProducts;
 
@@ -31,7 +34,7 @@ const GridProductsHome = (props) => {
                                         </div>
                                     </div>
                                     <div className=" text-white text-sm flex justify-between gap-5">
-                                            <Button className='bg-[#3D550C] px-1 rounded-sm'>Add to cart</Button>
+                                            <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setCartItems(item))}>Add to cart</Button>
                                             <Button className='bg-[#3D550C] px-1 rounded-sm'>wishlist</Button>
                                     </div>
                                 </div>
