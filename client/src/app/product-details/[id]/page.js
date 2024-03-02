@@ -1,10 +1,13 @@
 'use client'
 import Header from '@/app/components/header/page'
+import { setCartItems } from '@/app/redux/reducerSlices/cartSlice'
 import { Button, Image } from '@nextui-org/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 const page = ({ params }) => {
+  const dispatch= useDispatch()
   const [productDetails, setProductDetails] = useState([])
 
   const fetchProductById = async () => {
@@ -16,6 +19,7 @@ const page = ({ params }) => {
   useEffect(() => {
     fetchProductById()
   }, [])
+
   return (
     <>
       <Header />
@@ -26,7 +30,7 @@ const page = ({ params }) => {
               <h1 className='text-3xl'>{productDetails.productName}</h1>
               <p>{productDetails.productDescription}</p>
               <p className='text-xl'>Rs. {productDetails.productPrice}</p>
-              <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5'>Add to Cart</Button>
+              <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5' onClick={()=>dispatch(setCartItems(productDetails))}>Add to Cart</Button>
               <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5'>Add to Wishlist</Button>
             </div>
           </div>

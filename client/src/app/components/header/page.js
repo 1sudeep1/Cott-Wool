@@ -3,7 +3,7 @@ import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
 import { useRouter } from 'next/navigation'
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input } from "@nextui-org/react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Image, Input, Badge } from "@nextui-org/react";
 import Link from 'next/link';
 import { IoCartOutline, IoHeartOutline, IoSearch } from "react-icons/io5";
 import axios from 'axios';
@@ -51,6 +51,7 @@ const Header = () => {
     fetchCategory()
   }, [])
 
+  const {cartCounter}= useSelector(state=>state.cart)
   return (
     <>
 
@@ -127,12 +128,16 @@ const Header = () => {
 
 
         <NavbarContent justify="end">
-          <NavbarItem>
-            <IoHeartOutline className='text-3xl' title='wishlist' />
-          </NavbarItem>
-          <NavbarItem>
-            <IoCartOutline className='text-3xl' title='cart' />
-          </NavbarItem>
+          <div className='flex items-baseline justify-between gap-3'>
+            <NavbarItem>
+              <IoHeartOutline className='text-3xl' title='wishlist' />
+            </NavbarItem>
+            <NavbarItem>
+              <Badge className='bg-red-600 p-3 text-white' content={cartCounter} shape="circle">
+                <IoCartOutline className='text-3xl' title='cart' />
+              </Badge>
+            </NavbarItem>
+          </div>
 
           <NavbarItem>
             {isLoggedIn ?
