@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
@@ -40,6 +40,8 @@ const Header = () => {
   }
 
   const [category, setCategory] = useState([])
+  const [subCategory, setSubCategory] = useState([])
+  const [toggleCat, setToggleCat]= useState(false)
 
   const fetchCategory = async () => {
     const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
@@ -52,6 +54,15 @@ const Header = () => {
   }, [])
 
   const {cartCounter}= useSelector(state=>state.cart)
+
+  const handleMouseEnter=(e)=>{
+    setSubCategory(e)
+    setToggleCat(true)
+  }
+  const handleMouseLeave=()=>{
+    setToggleCat(false)
+  }
+
   return (
     <>
 
@@ -81,10 +92,12 @@ const Header = () => {
                             aria-label="Action event example"
                           >
                             {category.map((item, id) => (
-                              <DropdownItem key={id}>
+                              <DropdownItem key={id} onMouseEnter={()=>handleMouseEnter(item.subCategoryName)}>
                                 <Link href={`category-product/${item.categoryName}`}>{item.categoryName}</Link>
                               </DropdownItem>
                             ))}
+
+
                           </DropdownMenu>
                         </Dropdown>
                         :
@@ -188,6 +201,12 @@ const Header = () => {
           </NavbarItem>
         </NavbarContent>
       </Navbar>
+ 
+      <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-10' onMouseLeave={()=>handleMouseLeave()}>
+        {toggleCat && subCategory.map((subCat)=>(
+          <li className='py-1'>{subCat}</li>
+        ))}
+      </ul>
     </>
   )
 }
