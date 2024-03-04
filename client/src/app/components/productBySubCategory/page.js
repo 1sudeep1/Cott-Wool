@@ -7,20 +7,20 @@ import { setCartItems } from '@/app/redux/reducerSlices/cartSlice';
 const page = (props) => {
     const dispatch= useDispatch()
     const router= useRouter()
-    const [productsByCat, setProductsByCat]= useState([])
+    const [productsBySubCat, setProductsBySubCat]= useState([])
 
-    const fetchProductsByCat= async()=>{
+    const fetchProductsBySubCat= async()=>{
         try{
-            const res= await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category-products/${props.categoryTitle}`)
+            const res= await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/subcategory-products/${props.categoryTitle}`)
             const data= await res.data
-            setProductsByCat(data.productByCategory)
+            setProductsBySubCat(data.productBySubCategory)
         }catch(err){
             console.log(err)
         }
     }
 
     useEffect(()=>{
-        fetchProductsByCat()
+        fetchProductsBySubCat()
     },[])
 
     const handleProduct=(id)=>{
@@ -32,7 +32,7 @@ const page = (props) => {
                 <div className="container mx-auto">
                 <h1 className='text-xl font-semibold p-5 capitalize'>{props.categoryTitle}</h1>
                     <div className="flex flex-wrap gap-2">
-                        {productsByCat.map((item, id)=>(
+                        {productsBySubCat.map((item, id)=>(
 
                         <div className="p-4 w-[200px] h-auto shadow-lg cursor-pointer flex flex-col items-center justify-between" key={item._id} onClick={()=>handleProduct(item._id)}>
                             <div>
@@ -47,7 +47,7 @@ const page = (props) => {
                                 </div>
                             </div>
                             <div className=" text-white text-sm flex justify-between gap-5">
-                                <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setCartItems(item))}>Add to cart</Button>
+                                <Button className='bg-[#3D550C] px-1 rounded-sm'onClick={()=>dispatch(setCartItems(item))}>Add to cart</Button>
                                 <Button className='bg-[#3D550C] px-1 rounded-sm'>wishlist</Button>
                             </div>
                         </div>
