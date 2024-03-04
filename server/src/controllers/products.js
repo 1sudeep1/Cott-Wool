@@ -71,10 +71,21 @@ const getProductByCategory= async(req, res)=>{
     }
 }
 
+const getProductBySubCategory= async(req, res)=>{
+    try{
+        const productBySubCategory= await Products.find({productSubCategory:req.params.subCategory})
+        if(productBySubCategory){
+            res.json({productBySubCategory})
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
 
 
 
 
 
 
-module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory }
+
+module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory, getProductBySubCategory }

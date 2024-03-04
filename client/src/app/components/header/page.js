@@ -204,7 +204,7 @@ const Header = () => {
  
       <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-10' onMouseLeave={()=>handleMouseLeave()}>
         {toggleCat && subCategory.map((subCat)=>(
-          <li className='py-1'>{subCat}</li>
+          <Link href={`subcategory-products/${subCat}`}><li className='py-1'>{subCat}</li></Link>
         ))}
       </ul>
     </>
