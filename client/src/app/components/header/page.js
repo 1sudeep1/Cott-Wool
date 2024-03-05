@@ -146,7 +146,7 @@ const Header = () => {
               <IoHeartOutline className='text-3xl' title='wishlist' />
             </NavbarItem>
             <NavbarItem>
-              <Badge className='bg-red-600 p-3 text-white' content={cartCounter} shape="circle">
+              <Badge className={`bg-red-600 p-3 text-white ${cartCounter<1? 'hidden':null}`} content={cartCounter} shape="circle">
                 <IoCartOutline className='text-3xl' title='cart' />
               </Badge>
             </NavbarItem>
