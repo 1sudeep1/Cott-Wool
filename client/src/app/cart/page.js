@@ -4,11 +4,13 @@ import Header from '../components/header/page'
 import Footer from '../components/footer/page'
 import { Image } from '@nextui-org/react'
 import { IoTrash } from "react-icons/io5";
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { removeCartItems } from '../redux/reducerSlices/cartSlice'
 
 const CartItems = () => {
-    const {cartItems, totalPrice}= useSelector(state=>state.cart)
-    const finalPrice= totalPrice.toLocaleString();
+    const dispatch= useDispatch()
+    const {cartItems, totalAmount}= useSelector(state=>state.cart)
+    const finalPrice= totalAmount.toLocaleString();
     return (
         <>
             <Header />
@@ -37,8 +39,8 @@ const CartItems = () => {
                         </td>
                         <td className='border text-center w-20'>{item.quantity}</td>
                         <td className='border text-center w-24'>Rs. {item.productPrice}</td>
-                        <td className='border text-center w-24'>Rs. {item.totalPrice}</td>
-                        <td className='border text-center text-xl w-20 text-red-600 ps-5'><IoTrash /></td>
+                        <td className='border text-center w-24'>Rs. {item.totalPrice.toLocaleString()}</td>
+                        <td className='border text-center text-xl w-20 text-red-600 ps-5' onClick={()=>dispatch(removeCartItems(item))}><IoTrash /></td>
                     </tr>
                     ))}
                 </tbody>
