@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import { useDispatch } from 'react-redux';
 import { setCartItems } from '@/app/redux/reducerSlices/cartSlice';
+import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice';
 const page = (props) => {
     const dispatch= useDispatch()
     const router= useRouter()
@@ -48,7 +49,7 @@ const page = (props) => {
                             </div>
                             <div className=" text-white text-sm flex justify-between gap-5">
                                 <Button className='bg-[#3D550C] px-1 rounded-sm'onClick={()=>dispatch(setCartItems(item))}>Add to cart</Button>
-                                <Button className='bg-[#3D550C] px-1 rounded-sm'>wishlist</Button>
+                                <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setWishListItems(item))}>wishlist</Button>
                             </div>
                         </div>
                         ))}

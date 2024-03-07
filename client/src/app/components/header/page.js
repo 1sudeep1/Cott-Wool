@@ -33,6 +33,7 @@ const AuthButtons = () => {
 const Header = () => {
   const router = useRouter()
   const { userDetails, isLoggedIn } = useSelector((state, actions) => state.user)
+  const {wishListCounter}= useSelector(state=>state.wishList)
   const dispatch = useDispatch()
   const handleLogout = () => {
     router.push('/login')
@@ -92,7 +93,7 @@ const Header = () => {
                             aria-label="Action event example"
                           >
                             {category.map((item, id) => (
-                              <DropdownItem key={id} onMouseEnter={()=>handleMouseEnter(item.subCategoryName)}>
+                              <DropdownItem className='hover:bg-[#1f3a01e1] hover:text-white' key={id} onMouseEnter={()=>handleMouseEnter(item.subCategoryName)}>
                                 <Link href={`category-product/${item.categoryName}`}>{item.categoryName}</Link>
                               </DropdownItem>
                             ))}
@@ -141,12 +142,14 @@ const Header = () => {
 
 
         <NavbarContent justify="end">
-          <div className='flex items-baseline justify-between gap-3'>
-            <NavbarItem>
+          <div className='flex gap-5 mx-auto'>
+            <NavbarItem as={Link} href='/wishlist'>
+            <Badge className={`bg-red-600 text-white ${wishListCounter<1? 'hidden':null}`} content={wishListCounter} shape="circle" size='lg'>
               <IoHeartOutline className='text-3xl' title='wishlist' />
+              </Badge>
             </NavbarItem>
             <NavbarItem as={Link} href='/cart'>
-              <Badge className={`bg-red-600 p-3 text-white ${cartCounter<1? 'hidden':null}`} content={cartCounter} shape="circle">
+              <Badge className={`bg-red-600 text-white ${cartCounter<1? 'hidden':null}`} content={cartCounter} shape="circle" size='lg'>
                 <IoCartOutline className='text-3xl' title='cart' />
               </Badge>
             </NavbarItem>
@@ -204,7 +207,7 @@ const Header = () => {
  
       <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-10' onMouseLeave={()=>handleMouseLeave()}>
         {toggleCat && subCategory.map((subCat)=>(
-          <Link href={`subcategory-products/${subCat}`}><li className='py-1'>{subCat}</li></Link>
+          <Link href={`subcategory-products/${subCat}`}><li className='py-1 ps-2 hover:bg-[#1f3a01e1] hover:text-white'>{subCat}</li></Link>
         ))}
       </ul>
     </>

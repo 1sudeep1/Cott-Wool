@@ -1,6 +1,7 @@
 'use client'
 import Header from '@/app/components/header/page'
 import { setCartItems } from '@/app/redux/reducerSlices/cartSlice'
+import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice'
 import { Button, Image } from '@nextui-org/react'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
@@ -31,7 +32,7 @@ const page = ({ params }) => {
               <p>{productDetails.productDescription}</p>
               <p className='text-xl'>Rs. {productDetails.productPrice}</p>
               <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5' onClick={()=>dispatch(setCartItems(productDetails))}>Add to Cart</Button>
-              <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5'>Add to Wishlist</Button>
+              <Button color="primary" className='border px-2 rounded-lg bg-[#3D550C] text-white my-5' onClick={()=>dispatch(setWishListItems(productDetails))}>Add to Wishlist</Button>
             </div>
           </div>
       </section>
