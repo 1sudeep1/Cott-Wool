@@ -82,10 +82,32 @@ const getProductBySubCategory= async(req, res)=>{
     }
 }
 
+const searchProducts= async(req, res)=>{
+    try{
+        const searchTerm = req.query.item;
+        const searchResult = await Products.find({ 
+            $or: [
+                { productName: { $regex: new RegExp(searchTerm, 'i') } },
+                { productImage: { $regex: new RegExp(searchTerm, 'i') } },
+                { productDescription: { $regex: new RegExp(searchTerm, 'i') } },
+                { productCategory: { $regex: new RegExp(searchTerm, 'i') } },
+                { productSubCategory: { $regex: new RegExp(searchTerm, 'i') } },
+            ]
+        });
+        if(searchResult.length>0){
+            res.json(searchResult)
+        }else{
+            res.json('No result found')
+        }
+    }catch(err){
+        console.log(err)
+    }
+}
 
 
 
 
 
 
-module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory, getProductBySubCategory }
+
+module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory, getProductBySubCategory, searchProducts }
