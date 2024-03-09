@@ -1,5 +1,5 @@
 const express = require('express')
-const {addProducts, getAllProducts, deleteProduct, getProductsById, getProductByCategory, getProductBySubCategory}= require('../controllers/products')
+const {addProducts, getAllProducts, deleteProduct, getProductsById, getProductByCategory, getProductBySubCategory, searchProducts}= require('../controllers/products')
 router=express.Router()
 const multer  = require('multer')
 
@@ -31,6 +31,9 @@ router.get('/category-products/:category', getProductByCategory)
 
 //routes for products according to subCategory
 router.get('/subcategory-products/:subCategory', getProductBySubCategory)
+
+//routes for search product
+router.get('/search', searchProducts)
 
 
 

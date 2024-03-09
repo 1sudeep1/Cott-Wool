@@ -133,7 +133,7 @@ const Header = () => {
               placeholder="Type to search products..."
               size="sm"
               type="search"
-              startContent={<IoSearch className='text-xl' />}
+              endContent={<IoSearch className='text-xl' />}
               className="border rounded-2xl text-gray-400"
             />
           </NavbarItem>
@@ -205,7 +205,7 @@ const Header = () => {
         </NavbarContent>
       </Navbar>
  
-      <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-10' onMouseLeave={()=>handleMouseLeave()}>
+      <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-20' onMouseLeave={()=>handleMouseLeave()}>
         {toggleCat && subCategory.map((subCat)=>(
           <Link href={`subcategory-products/${subCat}`}><li className='py-1 ps-2 hover:bg-[#1f3a01e1] hover:text-white'>{subCat}</li></Link>
         ))}
