@@ -18,7 +18,8 @@ const GridProductsHome = (props) => {
         <section className="text-gray-600 body-font bg-white mt-10">
             <div className="container mx-auto">
                 <div className="flex flex-wrap gap-2">
-                    {allProducts.map((item) => {
+                    {allProducts.length>0 && Array.isArray(allProducts) ?
+                     allProducts.map((item) => {
                         try {
                             return (
                                 <div className="p-4 w-[200px] h-auto shadow-lg cursor-pointer flex flex-col items-center justify-between" key={item._id} onClick={()=>handleProduct(item._id)} >
@@ -44,7 +45,8 @@ const GridProductsHome = (props) => {
                             console.error('Error processing image:', error);
                             return null;
                         }
-                    })}
+                    }):<h1>{allProducts}</h1>
+                }
                 </div>
             </div>
         </section>
