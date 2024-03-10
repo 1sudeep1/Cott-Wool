@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Button } from "@nextui-org/react";
 import { useDispatch, useSelector } from 'react-redux';
 import { setLogout } from '../../redux/reducerSlices/userSlice'
@@ -7,7 +7,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Im
 import Link from 'next/link';
 import { IoCartOutline, IoHeartOutline, IoSearch } from "react-icons/io5";
 import axios from 'axios';
-
+import { useFormik } from 'formik';
 const navBarConfig = {
   true: [{ 'label': 'Categories', 'href': '/categories' }, { 'label': 'Contact Us', 'href': '/contact' }],
   false: [{ 'label': 'About', 'href': '/about' }, { 'label': 'Features', 'href': '/features' }]
@@ -64,9 +64,26 @@ const Header = () => {
     setToggleCat(false)
   }
 
+  const handleSearch = async (item) => {
+    try {
+      router.push(`/search?item=${item.searchItem}`)
+    } catch (error) {
+      console.error('Error searching:', error);
+    }
+  };
+  
+
+  const formik= useFormik({
+    initialValues:{
+      searchItem:''
+    },
+    onSubmit:values=>{
+      handleSearch(values)
+    }
+  })
+
   return (
     <>
-
       <Navbar className="bg-white">
         <NavbarBrand as={Link} href="/">
           <Image src='/logo.png' width={63} height={63} />
@@ -97,8 +114,6 @@ const Header = () => {
                                 <Link href={`category-product/${item.categoryName}`}>{item.categoryName}</Link>
                               </DropdownItem>
                             ))}
-
-
                           </DropdownMenu>
                         </Dropdown>
                         :
@@ -116,26 +131,15 @@ const Header = () => {
                   <Link key={id} color="foreground" href={item.href}>
                     {item.label}
                   </Link>
-
                 )}
 
               </div>
           }
           <NavbarItem>
-            <Input
-              classNames={{
-                base: "max-w-full h-10",
-                mainWrapper: "h-full",
-                input: "text-small",
-                inputWrapper: "h-full font-normal text-default-500 bg-default-400/20 dark:bg-default-500/20",
-
-              }}
-              placeholder="Type to search products..."
-              size="sm"
-              type="search"
-              endContent={<IoSearch className='text-xl' />}
-              className="border rounded-2xl text-gray-400"
-            />
+            <form className='flex relative' onSubmit={formik.handleSubmit}>
+            <input className='p-1 border rounded-xl' id='search' name='searchItem' type='text' placeholder='type to search...' onChange={formik.handleChange} />
+            <Button type='submit' className='rounded-r-xl text-white absolute right-0 bottom-0 top-0 bg-[#3D550C] p-2'><IoSearch className='text-xl' /></Button>
+            </form>
           </NavbarItem>
 
         </NavbarContent>

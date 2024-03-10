@@ -97,7 +97,7 @@ const searchProducts= async(req, res)=>{
         if(searchResult.length>0){
             res.json(searchResult)
         }else{
-            res.json('No result found')
+            res.json('Sorry!!  No items found...')
         }
     }catch(err){
         console.log(err)
