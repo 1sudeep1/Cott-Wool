@@ -4,6 +4,7 @@ import { Button, Image} from "@nextui-org/react";
 import { setCartItems } from '@/app/redux/reducerSlices/cartSlice';
 import { useDispatch } from 'react-redux';
 import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice';
+import axios from 'axios';
 const GridProductsHome = (props) => {
     const dispatch= useDispatch()
     const router= useRouter()
@@ -13,7 +14,9 @@ const GridProductsHome = (props) => {
         router.push(`/product-details/${id}`)
     }
 
-
+    const handleCartItems=(cartItem)=>{
+        dispatch(setCartItems(cartItem))
+    }
     return (
         <section className="text-gray-600 body-font bg-white mt-10">
             <div className="container mx-auto">
@@ -36,7 +39,7 @@ const GridProductsHome = (props) => {
                                         </div>
                                     </div>
                                     <div className=" text-white text-sm flex justify-between gap-5">
-                                            <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setCartItems(item))}>Add to cart</Button>
+                                            <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>handleCartItems(item)}>Add to cart</Button>
                                             <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setWishListItems(item))}>wishlist</Button>
                                     </div>
                                 </div>

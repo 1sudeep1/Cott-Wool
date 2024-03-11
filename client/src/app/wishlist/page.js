@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-import { Button, Image } from '@nextui-org/react'
+import { Button, Image, Pagination } from '@nextui-org/react'
 import { IoTrash, IoCart } from "react-icons/io5";
 import Header from '../components/header/page'
 import Footer from '../components/footer/page'
@@ -16,6 +16,16 @@ const WishList = () => {
     const handleProduct=(id)=>{
         router.push(`/product-details${id}`)
     }
+
+    const [page, setPage] = React.useState(1);
+    const rowsPerPage = 4;
+    const pages = Math.ceil(wishListItems.length / rowsPerPage);
+    const items = React.useMemo(() => {
+        const start = (page - 1) * rowsPerPage;
+        const end = start + rowsPerPage;
+
+        return wishListItems.slice(start, end);
+    }, [page, wishListItems]);
     return (
         <>
             <Header />
@@ -33,7 +43,7 @@ const WishList = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {wishListItems.map((item)=>(
+                    {items.map((item)=>(
                 <tr className='border hover:bg-green-100' key={item}>
                         <td className='mx-auto w-60'>
                             <div className='flex ps-10 gap-5 cursor-pointer' onClick={()=>handleProduct(item._id)}>
@@ -51,6 +61,15 @@ const WishList = () => {
                     ))}
                 </tbody>
             </table>
+            <Pagination className='w-full'
+                isCompact
+                showControls
+                showShadow
+                color='success'
+                page={page}
+                total={pages}
+                onChange={(page) => setPage(page)}
+            />
             <Footer />
         </>
     )
