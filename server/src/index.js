@@ -9,6 +9,7 @@ const port = process.env.PORT
 const userRoute=require('./routes/users')
 const categoryRoute=require('./routes/categoryRoutes')
 const productRoute=require('./routes/productRoutes')
+const cartRoute= require('./routes/cartRoutes')
 
 
 //importing the db connection
@@ -30,6 +31,7 @@ connection()
 app.use(userRoute)
 app.use(categoryRoute)
 app.use(productRoute)
+app.use(cartRoute)
 
 
 
