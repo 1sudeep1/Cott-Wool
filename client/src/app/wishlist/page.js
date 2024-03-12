@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, Image, Pagination } from '@nextui-org/react'
 import { IoTrash, IoCart } from "react-icons/io5";
 import Header from '../components/header/page'
@@ -8,6 +8,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { clearWishListItems, removeWishListItems } from '../redux/reducerSlices/wishListSlice';
 import { useRouter } from 'next/navigation'
 import { setCartItems } from '../redux/reducerSlices/cartSlice';
+import axios from 'axios';
+import toast from 'react-hot-toast';
 
 const WishList = () => {
     const router= useRouter()
@@ -26,12 +28,52 @@ const WishList = () => {
 
         return wishListItems.slice(start, end);
     }, [page, wishListItems]);
+
+    const handleWishList = async () => {
+        await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist`, {wishListItems})
+    }
+
+    useEffect(() => {
+        handleWishList()
+    }, [wishListItems])
+
+    const clearWishList=async()=>{
+        dispatch(clearWishListItems())
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist`)
+        const data = await res.data
+        toast(data.check===true? data.msg : data.msg,
+            {
+              icon: data.check===true?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
+    }
+
+    const handleRemoveWishListItem= async(wishListItem)=>{
+        dispatch(removeWishListItems(wishListItem))
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist/${wishListItem._id}`)
+        const data = await res.data
+        toast(data.check===true? data.msg : data.msg,
+            {
+              icon: data.check===true?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
+    }
     return (
         <>
             <Header />
             <h1 className='text-2xl text-center my-5'>My WishList</h1>
             <div className='flex justify-end me-10'>
-            <Button onClick={()=>dispatch(clearWishListItems())} className='border px-1 rounded-sm bg-red-600 text-white'>Clear WishList</Button>
+            <Button onClick={clearWishList} className='border px-1 rounded-sm bg-red-600 text-white'>Clear WishList</Button>
             </div>
             <table className="table-auto bg-white mx-auto w-full">
                 <thead>
@@ -55,7 +97,7 @@ const WishList = () => {
                             </div>
                         </td>
                         <td className='text-center w-20'>Rs. {item.productPrice}</td>
-                        <td className='text-center  w-20 '><IoTrash onClick={()=>dispatch(removeWishListItems(item))} className='text-2xl text-red-600 mx-auto cursor-pointer'/></td>
+                        <td className='text-center  w-20 '><IoTrash onClick={()=>handleRemoveWishListItem(item)} className='text-2xl text-red-600 mx-auto cursor-pointer'/></td>
                         <td className='text-center w-24'><IoCart onClick={()=>dispatch(setCartItems(item))} className='text-3xl text-[#273D24] mx-auto cursor-pointer'/></td>            
                 </tr>
                     ))}

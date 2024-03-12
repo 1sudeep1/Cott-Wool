@@ -10,6 +10,7 @@ const userRoute=require('./routes/users')
 const categoryRoute=require('./routes/categoryRoutes')
 const productRoute=require('./routes/productRoutes')
 const cartRoute= require('./routes/cartRoutes')
+const wishListRoute= require('./routes/wishListRoutes')
 
 
 //importing the db connection
@@ -32,6 +33,7 @@ app.use(userRoute)
 app.use(categoryRoute)
 app.use(productRoute)
 app.use(cartRoute)
+app.use(wishListRoute)
 
 
 

@@ -61,7 +61,16 @@ const CartItems = () => {
         dispatch(removeCartItems(cartItem))
         const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${cartItem._id}`)
         const data = await res.data
-        console.log(data)
+        toast(data.check===true? data.msg : data.msg,
+            {
+              icon: data.check===true?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
     }
 
     return (

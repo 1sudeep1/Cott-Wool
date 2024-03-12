@@ -41,7 +41,7 @@ const removeCartById= async(req, res)=>{
     try {
         const removeCartItem = await Cart.findByIdAndDelete(req.params.id)
         if (removeCartItem) {
-          res.json({ msg: 'cart item successfully deleted' })
+          res.json({ msg: 'cart item successfully deleted', check:true })
         }
       } catch (err) {
         console.log(err)

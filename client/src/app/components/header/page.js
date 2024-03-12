@@ -209,7 +209,7 @@ const Header = () => {
         </NavbarContent>
       </Navbar>
  
-      <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[41%] z-20' onMouseLeave={()=>handleMouseLeave()}>
+      <ul className='bg-white rounded-sm w-[220px] fixed ps-2 m-0 right-[40%] z-20' onMouseLeave={()=>handleMouseLeave()}>
         {toggleCat && subCategory.map((subCat)=>(
           <Link href={`subcategory-products/${subCat}`}><li className='py-1 ps-2 hover:bg-[#1f3a01e1] hover:text-white'>{subCat}</li></Link>
         ))}
