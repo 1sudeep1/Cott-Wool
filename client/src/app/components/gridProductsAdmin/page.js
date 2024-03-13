@@ -1,9 +1,11 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Button, Image } from "@nextui-org/react";
+import { Textarea, Button, Image, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
+import DynamicForm from '../dynamicForm/page';
 
 const GridProducts = (props) => {
+    const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const allProducts = props.allProducts;
 
     const [productId, setProductId] = useState('')
@@ -56,7 +58,30 @@ const GridProducts = (props) => {
                                         <p>Rs. {item.productPrice}</p>
 
                                         <div className="flex justify-between gap-14">
-                                            <Button className='text-blue-700'>Edit</Button>
+                                            <Button onPress={onOpen} className='text-blue-700'>Edit</Button>
+                                            <Modal
+                                                isOpen={isOpen}
+                                                onOpenChange={onOpenChange}
+                                                placement="top-center"
+                                                className='bg-pink-400'
+                                            >
+                                                <ModalContent className='p-5'>
+                                                    {(onClose) => (
+                                                        <>
+                                                            <DynamicForm formTitle='Update Products' fieldList={[
+                                                                { fieldName: "Product Name", type: 'text', placeholder: 'enter product name', name: 'productName' },
+                                                                { fieldName: "Product Image", type: 'file', name: 'productImage' },
+                                                                { fieldName: "Product Price", type: 'number', name: 'productPrice', placeholder: 'enter product price' },
+                                                            ]}
+                                                                textArea={[{ fieldName: 'Product Description', name: 'productDescription', placeholder: 'enter product description' }]}
+                                                                chooseCategory={[{ fieldName: 'Choose Category', placeholder: 'select category', name: 'productCategory' }]}
+                                                                chooseSubCategory={[{ fieldName: 'Choose Sub Category', placeholder: 'select Sub category', name: 'productSubCategory' }]}
+                                                                button='Add'
+                                                            />
+                                                        </>
+                                                    )}
+                                                </ModalContent>
+                                            </Modal>
                                             <Button onClick={(e) => handleDelete(item._id)} className='text-red-600'>Delete</Button>
                                         </div>
                                     </div>
