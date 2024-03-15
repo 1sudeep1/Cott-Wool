@@ -5,8 +5,10 @@ import { Textarea, Button, Image, Modal, ModalContent, ModalHeader, ModalBody, M
 import DynamicForm from '../dynamicForm/page';
 
 const GridProducts = (props) => {
+    const [selectedProduct, setSelectedProduct] = useState(null);
     const { isOpen, onOpen, onOpenChange } = useDisclosure();
     const allProducts = props.allProducts;
+
 
     const [productId, setProductId] = useState('')
 
@@ -34,8 +36,17 @@ const GridProducts = (props) => {
         await deleteProduct()
     }
 
+    const handleEdit = async (product) => {
+        setSelectedProduct(product);
+        onOpen();
+    };
 
 
+
+    const handleClose = () => {
+        setSelectedProduct(null); // Clear selectedProduct when closing the modal
+        onOpenChange(false); // Close the modal
+    };
 
     return (
         <section className="text-gray-600 body-font">
@@ -58,28 +69,40 @@ const GridProducts = (props) => {
                                         <p>Rs. {item.productPrice}</p>
 
                                         <div className="flex justify-between gap-14">
-                                            <Button onPress={onOpen} className='text-blue-700'>Edit</Button>
+                                            <Button onClick={() => handleEdit(item._id)} onPress={onOpen} className='text-blue-700'>Edit</Button>
                                             <Modal
                                                 isOpen={isOpen}
+                                                onClose={handleClose} 
                                                 onOpenChange={onOpenChange}
                                                 placement="top-center"
-                                                className='bg-pink-400'
+                                                className='bg-[#b1b6b177]'
                                             >
-                                                <ModalContent className='p-5'>
-                                                    {(onClose) => (
+                                                <ModalContent className='p-5'>                               
                                                         <>
-                                                            <DynamicForm formTitle='Update Products' fieldList={[
-                                                                { fieldName: "Product Name", type: 'text', placeholder: 'enter product name', name: 'productName' },
-                                                                { fieldName: "Product Image", type: 'file', name: 'productImage' },
-                                                                { fieldName: "Product Price", type: 'number', name: 'productPrice', placeholder: 'enter product price' },
-                                                            ]}
-                                                                textArea={[{ fieldName: 'Product Description', name: 'productDescription', placeholder: 'enter product description' }]}
-                                                                chooseCategory={[{ fieldName: 'Choose Category', placeholder: 'select category', name: 'productCategory' }]}
-                                                                chooseSubCategory={[{ fieldName: 'Choose Sub Category', placeholder: 'select Sub category', name: 'productSubCategory' }]}
-                                                                button='Add'
+                                                            <DynamicForm
+                                                                productId={selectedProduct}
+                                                                formTitle='Update Products'
+                                                                initialFieldValues={{
+                                                                    productName: selectedProduct?selectedProduct.productName:'',
+                                                                    productImage: '',
+                                                                    productPrice: selectedProduct?selectedProduct.productPrice:'',
+                                                                    productDescription: selectedProduct?selectedProduct.productDescription :'',
+                                                                    productCategory: selectedProduct?selectedProduct.productCategory:'',
+                                                                    productSubCategory: selectedProduct?selectedProduct.productSubCategory:'' ,
+                                                                    // Add more fields here as needed
+                                                                  }}
+                                                                // onSubmit={handleUpdate} // Handle form submission
+                                                                fieldList={[
+                                                                    { fieldName: "Product Name",type:'text', name: 'productName', value: selectedProduct?selectedProduct.productName:''},
+                                                                    { fieldName: "Product Image",type:'file', name: 'productImage', value: selectedProduct?selectedProduct.productImage:''},
+                                                                    { fieldName: "Product Price",type:'number', name: 'productPrice', value: selectedProduct?selectedProduct.productPrice:''},
+                                                                  ]}
+                                                                  textArea={[{fieldName:'Product Description', name:'productDescription', value: selectedProduct?selectedProduct.productDescription :''}]}
+                                                                  chooseCategory={[{fieldName:'Choose Category', name:'productCategory', value: selectedProduct?selectedProduct.productCategory:''}]}
+                                                                  chooseSubCategory={[{fieldName:'Choose Sub Category', name:'productSubCategory', value: selectedProduct?selectedProduct.productSubCategory:'' }]}
+                                                                  button='Update'
                                                             />
-                                                        </>
-                                                    )}
+                                                        </> 
                                                 </ModalContent>
                                             </Modal>
                                             <Button onClick={(e) => handleDelete(item._id)} className='text-red-600'>Delete</Button>

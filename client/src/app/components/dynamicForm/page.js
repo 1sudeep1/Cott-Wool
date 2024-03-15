@@ -72,6 +72,34 @@ const DynamicForm = (props) => {
             console.log(err)
         }
     }
+
+    const handleUpdate=async(productId, updateValue)=>{
+        try{
+        //    console.log('sudeep alina', productId)
+        const formData= new FormData();
+        formData.append('productImage', inputRef.current.files[0])
+    
+        for (let item in updateValue) {
+            formData.append(item, updateValue[item]);
+        }
+            const res = await axios.put(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/products/${productId}`, formData)
+            const data = await res.data;
+            toast(res.status==200? data.msg: data.msg,
+            {
+              icon: res.status==200?'✅':'❌',
+              style: {
+                borderRadius: '10px',
+                background: '#333',
+                color: '#fff',
+              },
+            }
+          );
+        }catch(err){
+            console.log(err)
+        }
+    }
+    
+
     return (
         <>
             <h1 className='text-lg mb-5 text-center'>{props.formTitle}</h1>
@@ -79,13 +107,19 @@ const DynamicForm = (props) => {
                 initialValues={initialFieldValues}
 
                 onSubmit={async (values, { resetForm }) => {
-                    if (values.productPrice) {
+                    if (values.productPrice && props.button=="Add") {
                         await handleProduct(values);
-                    } else {
+                                            
+                    } else if(props.button=="Update"){
+                        await handleUpdate(props.productId, values);
+                    }
+                    
+                    else {
                         await handleCategory(values);
                     }
                     resetForm()
                 }}
+
 
             >
                 {(formikProps) => (

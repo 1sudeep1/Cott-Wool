@@ -1,5 +1,5 @@
 const express = require('express')
-const {addProducts, getAllProducts, deleteProduct, getProductsById, getProductByCategory, getProductBySubCategory, searchProducts}= require('../controllers/products')
+const {addProducts, getAllProducts, deleteProduct, getProductsById, getProductByCategory, getProductBySubCategory, searchProducts, updateProduct}= require('../controllers/products')
 router=express.Router()
 const multer  = require('multer')
 
@@ -34,6 +34,9 @@ router.get('/subcategory-products/:subCategory', getProductBySubCategory)
 
 //routes for search product
 router.get('/search', searchProducts)
+
+//routes for update products
+router.put('/products/:id', upload.single('productImage'), updateProduct)
 
 
 
