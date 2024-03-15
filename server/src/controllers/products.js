@@ -105,9 +105,24 @@ const searchProducts= async(req, res)=>{
 }
 
 
+const updateProduct = async (req, res) => {
+    try {
+        if(req.file){
+            req.body.productImage=req.file.filename;
+          }
+        const updateProductData=await Products.findByIdAndUpdate(req.params.id, req.body)
+        if (updateProductData) {
+            res.status(200).json({ msg: 'product updated successfully.', check:true })
+          }else{
+            res.status(403).json({ msg: 'product updation failed', check:false })
+          }
+
+    } catch (err) {
+        console.log(err)
+    }
+}
 
 
 
 
-
-module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory, getProductBySubCategory, searchProducts }
+module.exports = { addProducts, getAllProducts, getProductsById, deleteProduct, getProductByCategory, getProductBySubCategory, searchProducts, updateProduct }
