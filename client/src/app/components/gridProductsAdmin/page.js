@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { useState } from 'react';
 import toast from 'react-hot-toast';
-import { Textarea, Button, Image, Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, useDisclosure, Checkbox, Input, Link } from "@nextui-org/react";
+import { Textarea, Button, Image, Modal, ModalContent,  useDisclosure} from "@nextui-org/react";
 import DynamicForm from '../dynamicForm/page';
 
 const GridProducts = (props) => {
@@ -75,10 +75,12 @@ const GridProducts = (props) => {
                                                 onClose={handleClose} 
                                                 onOpenChange={onOpenChange}
                                                 placement="top-center"
+                                                shouldBlockScroll="false"
+                                                shadow="none"
                                                 className='bg-[#b1b6b177]'
                                             >
                                                 <ModalContent className='p-5'>                               
-                                                        <>
+                                                       
                                                             <DynamicForm
                                                                 productId={selectedProduct}
                                                                 formTitle='Update Products'
@@ -89,9 +91,7 @@ const GridProducts = (props) => {
                                                                     productDescription: selectedProduct?selectedProduct.productDescription :'',
                                                                     productCategory: selectedProduct?selectedProduct.productCategory:'',
                                                                     productSubCategory: selectedProduct?selectedProduct.productSubCategory:'' ,
-                                                                    // Add more fields here as needed
                                                                   }}
-                                                                // onSubmit={handleUpdate} // Handle form submission
                                                                 fieldList={[
                                                                     { fieldName: "Product Name",type:'text', name: 'productName', value: selectedProduct?selectedProduct.productName:''},
                                                                     { fieldName: "Product Image",type:'file', name: 'productImage', value: selectedProduct?selectedProduct.productImage:''},
@@ -102,7 +102,6 @@ const GridProducts = (props) => {
                                                                   chooseSubCategory={[{fieldName:'Choose Sub Category', name:'productSubCategory', value: selectedProduct?selectedProduct.productSubCategory:'' }]}
                                                                   button='Update'
                                                             />
-                                                        </> 
                                                 </ModalContent>
                                             </Modal>
                                             <Button onClick={(e) => handleDelete(item._id)} className='text-red-600'>Delete</Button>
