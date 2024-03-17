@@ -6,8 +6,9 @@ import { Image } from "@nextui-org/react";
 import Header from '../components/header/page';
 
 const Profile = () => {
-    const { userDetails } = useSelector(state => state.user)
+    const { userDetails} = useSelector(state => state.user)
     const {role, fullName, dob, phone, email}= userDetails
+
     return (
         <>
             {role=="Admin"?<NavAdmin />:<Header/>}
