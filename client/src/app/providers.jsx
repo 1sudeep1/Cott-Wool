@@ -14,15 +14,19 @@ function Providers({ children }) {
   const router = useRouter();
   const { userDetails, token } = useSelector(state => state.user)
   const pathName = usePathname()
-  const unAuthenticatedRoute = ['/', '/login', '/register']
+  const unAuthenticatedRoute = ['/', '/login', '/register', '/search', '/about', '/features']
+  const signInUpRoute=['/login', '/register']
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     console.log(userDetails.role)
-    if (!token && !unAuthenticatedRoute.includes(pathName)) {
+    if (!token && !unAuthenticatedRoute.includes(pathName) && !pathName.startsWith('/product-details/')) {
       router.push('/login'); // Navigate to '/login' page
     } else if(token && userDetails.role!=="Admin" && pathName=="/admin"){
       router.push('/')
-    }else{
+    }else if(token && signInUpRoute.includes(pathName)){
+      router.push('/')
+    }
+    else{
       setLoading(false); // Authentication check complete, stop loading
     }
   }, [token, pathName, router]);
