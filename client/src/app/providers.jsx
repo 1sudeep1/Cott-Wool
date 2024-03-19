@@ -17,18 +17,19 @@ function Providers({ children }) {
   const unAuthenticatedRoute = ['/', '/login', '/register', '/search', '/about', '/features']
   const signInUpRoute=['/login', '/register']
   const [loading, setLoading] = useState(true);
+
   useEffect(() => {
-    if (!token && !unAuthenticatedRoute.includes(pathName) && !pathName.startsWith('/product-details/')) {
-      router.push('/login'); // Navigate to '/login' page
-    } else if(token && userDetails.role!=="Admin" && pathName=="/admin"){
-      router.push('/')
-    }else if(token && signInUpRoute.includes(pathName)){
-      router.push('/')
+    if (!token) {
+      if (!unAuthenticatedRoute.includes(pathName) && !pathName.startsWith('/product-details/')) {
+        router.push('/login');
+      }
+    } else {
+      if (pathName === '/admin' && userDetails.role !== "Admin") {
+        router.push('/');
+      }
     }
-    else{
-      setLoading(false); // Authentication check complete, stop loading
-    }
-  }, [token, pathName, router]);
+    setLoading(false);
+  }, [token, pathName, router, userDetails]);
 
   if (loading) {
     return (
