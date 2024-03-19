@@ -34,6 +34,7 @@ const Header = () => {
   const router = useRouter()
   const { userDetails, isLoggedIn } = useSelector((state, actions) => state.user)
   const {wishListCounter}= useSelector(state=>state.wishList)
+  const {counter} = useSelector(state=>state.cart)
   const dispatch = useDispatch()
   const handleLogout = () => {
     router.push('/login')
@@ -43,6 +44,7 @@ const Header = () => {
   const [category, setCategory] = useState([])
   const [subCategory, setSubCategory] = useState([])
   const [toggleCat, setToggleCat]= useState(false)
+  const [cartList, setCartList]= useState([])
 
   const fetchCategory = async () => {
     const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
@@ -50,11 +52,18 @@ const Header = () => {
     setCategory(data.allCategory)
   }
 
+  const fetchCartItems= async()=>{
+    const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
+    setCartList(cartRes.data.getCartItemsByUserId)
+}
+
   useEffect(() => {
     fetchCategory()
+    fetchCartItems()
+    fetchCartItems()
   }, [])
 
-  const {cartCounter}= useSelector(state=>state.cart)
+  // const {cartCounter}= useSelector(state=>state.cart)
 
   const handleMouseEnter=(e)=>{
     setSubCategory(e)
@@ -81,6 +90,7 @@ const Header = () => {
       handleSearch(values)
     }
   })
+
 
   return (
     <>
@@ -153,7 +163,7 @@ const Header = () => {
               </Badge>
             </NavbarItem>
             <NavbarItem as={Link} href='/cart'>
-              <Badge className={`bg-red-600 text-white ${cartCounter<1? 'hidden':null}`} content={cartCounter} shape="circle" size='lg'>
+              <Badge className={`bg-red-600 text-white ${counter<1? 'hidden':null}`} content={counter} shape="circle" size='lg'>
                 <IoCartOutline className='text-3xl' title='cart' />
               </Badge>
             </NavbarItem>
