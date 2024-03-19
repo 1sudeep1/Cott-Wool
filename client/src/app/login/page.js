@@ -73,7 +73,7 @@ const Login = () => {
           );
 
           if(data.check===true){
-            if(data.userByPhone.role=="Admin"){
+            if(data.userByPhone.role=="Admin" && data.token){
                 router.push('/admin')
             }else{
                 router.push('/')
