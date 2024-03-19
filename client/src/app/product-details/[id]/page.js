@@ -4,11 +4,13 @@ import { setCartItems, setCounter } from '@/app/redux/reducerSlices/cartSlice'
 import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice'
 import { Button, Image } from '@nextui-org/react'
 import axios from 'axios'
+import { useRouter } from 'next/navigation'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 
 const page = ({ params }) => {
+  const router=useRouter()
   const dispatch= useDispatch()
   const [productDetails, setProductDetails] = useState([])
   const { cartItems} = useSelector(state => state.cart)
@@ -28,7 +30,11 @@ const page = ({ params }) => {
 
 //function to save cart items to database
 const handleCart = async () => {
-    await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems:cartItems, userId:userDetails._id})
+  if(!userDetails._id){
+      router.push('/login')
+  }else{
+      await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems:cartItems, userId:userDetails._id})
+  }
 }
 
   const handleCartItems = async (cartItem) => {

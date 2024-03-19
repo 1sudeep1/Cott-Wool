@@ -22,7 +22,11 @@ const GridProductsHome = (props) => {
 
     //function to save cart items to database
     const handleCart = async () => {
-        await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems:cartItems, userId:userDetails._id})
+        if(!userDetails._id){
+            router.push('/login')
+        }else{
+            await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems:cartItems, userId:userDetails._id})
+        }
     }
 
     
