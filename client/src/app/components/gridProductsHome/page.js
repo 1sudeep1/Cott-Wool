@@ -1,22 +1,52 @@
 import { useRouter } from 'next/navigation';
-import React from 'react';
+import React, { useEffect} from 'react';
 import { Button, Image} from "@nextui-org/react";
-import { setCartItems } from '@/app/redux/reducerSlices/cartSlice';
-import { useDispatch } from 'react-redux';
+import { setCartItems, setCounter} from '@/app/redux/reducerSlices/cartSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice';
 import axios from 'axios';
 const GridProductsHome = (props) => {
     const dispatch= useDispatch()
     const router= useRouter()
     const allProducts = props.allProducts;
-
+    const { cartItems} = useSelector(state => state.cart)
+    const {userDetails}= useSelector(state=>state.user)
     const handleProduct=(id)=>{
         router.push(`/product-details/${id}`)
     }
 
-    const handleCartItems=(cartItem)=>{
-        dispatch(setCartItems(cartItem))
+    const fetchCartItems= async()=>{
+        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
+        dispatch(setCounter(cartRes.data.getCartItemsByUserId.length));
     }
+
+    //function to save cart items to database
+    const handleCart = async () => {
+        await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems:cartItems, userId:userDetails._id})
+    }
+
+    
+    const handleCartItems = async (cartItem) => {
+        try {
+            // Set items to the cart with the help of cartReducer
+            await dispatch(setCartItems(cartItem))
+        
+            // Save cart items to the database
+            await handleCart();
+        
+            // Fetch updated cart items after saving to the database
+            await fetchCartItems();
+        } catch (error) {
+            console.error('Error handling cart items:', error);
+        }
+    }
+    
+
+    useEffect(() => {
+        fetchCartItems();
+    }, []);
+    
+
     return (
         <section className="text-gray-600 body-font bg-white mt-10">
             <div className="container mx-auto">

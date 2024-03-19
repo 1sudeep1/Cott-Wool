@@ -1,8 +1,8 @@
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from '../components/header/page'
 import Footer from '../components/footer/page'
-import { Image, Button, Pagination } from '@nextui-org/react'
+import { Image, Button} from '@nextui-org/react'
 import { IoTrash } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCartItems, removeCartItems } from '../redux/reducerSlices/cartSlice'
@@ -14,36 +14,37 @@ import toast from 'react-hot-toast';
 const CartItems = () => {
     const router = useRouter()
     const dispatch = useDispatch()
-    const { cartItems, totalAmount } = useSelector(state => state.cart)
-    const finalPrice = totalAmount.toLocaleString();
+    const { cartItems} = useSelector(state => state.cart)
+    const {userDetails}= useSelector(state=>state.user)
+    const [cartList, setCartList]= useState([])
+    const [finalPrice, setFinalPrice]= useState(0)
 
     const handleProduct = (id) => {
         router.push(`/product-details/${id}`)
     }
 
-    const [page, setPage] = React.useState(1);
-    const rowsPerPage = 4;
-    const pages = Math.ceil(cartItems.length / rowsPerPage);
-    const items = React.useMemo(() => {
-        const start = (page - 1) * rowsPerPage;
-        const end = start + rowsPerPage;
 
-        return cartItems.slice(start, end);
-    }, [page, cartItems]);
-
-    const handleCart = async () => {
-        await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`, {cartItems})
+    const fetchCartItems= async()=>{
+        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
+        setCartList(cartRes.data.getCartItemsByUserId)
     }
 
     useEffect(() => {
-        handleCart()
-    }, [cartItems])
+        fetchCartItems();
+    }, [cartItems]); // This effect runs when cartItems changes
+    
+    useEffect(() => {
+        if (cartList) {
+            const totalPriceSum = cartList.reduce((total, item) => total + item.totalPrice, 0);
+            setFinalPrice(totalPriceSum);
+        }
+    }, [cartList]); // This effect runs when cartList changes
     
 
 
     const clearCart=async()=>{
         dispatch(clearCartItems())
-        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart`)
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
         const data = await res.data
         toast(data.check===true? data.msg : data.msg,
             {
@@ -55,11 +56,12 @@ const CartItems = () => {
               },
             }
           );
+          fetchCartItems()
     }
 
     const handleRemoveCartItem= async(cartItem)=>{
         dispatch(removeCartItems(cartItem))
-        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${cartItem._id}`)
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/carts/${cartItem._id}`)
         const data = await res.data
         toast(data.check===true? data.msg : data.msg,
             {
@@ -71,6 +73,7 @@ const CartItems = () => {
               },
             }
           );
+          fetchCartItems()
     }
 
     return (
@@ -92,7 +95,7 @@ const CartItems = () => {
                     </tr>
                 </thead>
                 <tbody>
-                    {items.length > 0 ? items.map((item) => (
+                    {cartList.length > 0 ? cartList.map((item) => (
                         <tr className='border hover:bg-green-100' key={item}>
                             <td className='mx-auto w-60'>
                                 <div className='flex ps-10 gap-5 cursor-pointer' onClick={() => handleProduct(item._id)}>
@@ -112,17 +115,9 @@ const CartItems = () => {
                 </tbody>
             </table>
             <div className='flex justify-end my-5 me-44'>
-                <p className='text-2xl'>Total Price: Rs. {finalPrice}</p>
+                <p className='text-2xl'>Total Price: Rs. {finalPrice.toLocaleString()}</p>
             </div>
-            <Pagination className='w-full'
-                isCompact
-                showControls
-                showShadow
-                color='success'
-                page={page}
-                total={pages}
-                onChange={(page) => setPage(page)}
-            />
+
             <Footer />
         </>
     )

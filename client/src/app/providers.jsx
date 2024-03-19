@@ -18,7 +18,6 @@ function Providers({ children }) {
   const signInUpRoute=['/login', '/register']
   const [loading, setLoading] = useState(true);
   useEffect(() => {
-    console.log(userDetails.role)
     if (!token && !unAuthenticatedRoute.includes(pathName) && !pathName.startsWith('/product-details/')) {
       router.push('/login'); // Navigate to '/login' page
     } else if(token && userDetails.role!=="Admin" && pathName=="/admin"){

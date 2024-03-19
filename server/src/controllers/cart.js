@@ -6,9 +6,10 @@ const jwt = require('jsonwebtoken');
 
 const addCart = async (req, res) => {
     try {
-        const { cartItems } = req.body;
+        const { cartItems, userId } = req.body;
 
         for (const item of cartItems) {
+            item.userId=userId
             const existingItem = await Cart.findByIdAndUpdate(item._id, {
                 quantity: item.quantity,
                 totalPrice: item.totalPrice
@@ -28,7 +29,7 @@ const addCart = async (req, res) => {
 
 const clearCart=async(req, res)=>{
     try{
-        await Cart.deleteMany()
+        await Cart.deleteMany({ userId: req.params.uId });
         res.json({msg:"cart cleared successfully", check:true})
 
     }catch(err){
@@ -48,5 +49,17 @@ const removeCartById= async(req, res)=>{
       }
 }
 
+const cartItemsByUserId= async(req, res)=>{
+    try{
+        const getCartItemsByUserId= await Cart.find({userId:req.params.userId})
+        if(getCartItemsByUserId){
+            res.json({getCartItemsByUserId})
+        }
+    }catch(err){
 
-module.exports = { addCart, clearCart, removeCartById }
+        console.log(err)
+    }
+}
+
+
+module.exports = { addCart, clearCart, removeCartById, cartItemsByUserId }
