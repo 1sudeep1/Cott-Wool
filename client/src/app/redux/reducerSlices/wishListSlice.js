@@ -14,7 +14,6 @@ export const wishListSlice= createSlice({
             const isItemExist = state.wishListItems.some(item => item._id === _id);
             if (!isItemExist) {
                 state.wishListItems.push({_id, productName, productImage, productPrice});
-                state.wishListCounter++;
             }else{
                 null
             }
@@ -30,8 +29,13 @@ export const wishListSlice= createSlice({
             return{
                 ...initialState
               }
-        }
+        },
+
+        setWishListCounter:(state, actions)=>{
+            //wishList length is being set to counter
+            state.wishListCounter=actions.payload
+        },
     }
 })
-export const {setWishListItems, removeWishListItems, clearWishListItems} = wishListSlice.actions;
+export const {setWishListItems, removeWishListItems, clearWishListItems, setWishListCounter} = wishListSlice.actions;
 export default wishListSlice.reducer;

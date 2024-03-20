@@ -5,6 +5,7 @@ const wishListModelSchema = new Schema({
     productImage:String,
     productName:String,
     productPrice:Number,
+    userId:String,
 });
 
 const WishList = mongoose.model('WishList', wishListModelSchema);
