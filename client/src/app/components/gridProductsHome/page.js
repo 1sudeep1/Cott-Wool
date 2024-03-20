@@ -3,13 +3,14 @@ import React, { useEffect} from 'react';
 import { Button, Image} from "@nextui-org/react";
 import { setCartItems, setCounter} from '@/app/redux/reducerSlices/cartSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { setWishListItems } from '@/app/redux/reducerSlices/wishListSlice';
+import { setWishListCounter, setWishListItems } from '@/app/redux/reducerSlices/wishListSlice';
 import axios from 'axios';
 const GridProductsHome = (props) => {
     const dispatch= useDispatch()
     const router= useRouter()
     const allProducts = props.allProducts;
     const { cartItems} = useSelector(state => state.cart)
+    const { wishListItems} = useSelector(state => state.wishList)
     const {userDetails}= useSelector(state=>state.user)
     const handleProduct=(id)=>{
         router.push(`/product-details/${id}`)
@@ -44,10 +45,40 @@ const GridProductsHome = (props) => {
             console.error('Error handling cart items:', error);
         }
     }
+
+    const fetchWishListItems= async()=>{
+        const wishListRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist/${userDetails._id}`)
+        dispatch(setWishListCounter(wishListRes.data.getwishListItemsByUserId.length));
+    }
+
+        //function to save cart items to database
+        const handleWishList = async () => {
+            if(!userDetails._id){
+                router.push('/login')
+            }else{
+                await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist`, {wishListItems:wishListItems, userId:userDetails._id})
+            }
+        }
+
+    const handleWishListItems = async (wishListItem) => {
+        try {
+            // Set items to the cart with the help of cartReducer
+            await dispatch(setWishListItems(wishListItem))
+        
+            // Save cart items to the database
+            await handleWishList();
+        
+            // Fetch updated cart items after saving to the database
+            await fetchWishListItems();
+        } catch (error) {
+            console.error('Error handling cart items:', error);
+        }
+    }
     
 
     useEffect(() => {
         fetchCartItems();
+        fetchWishListItems();
     }, []);
     
 
@@ -74,7 +105,7 @@ const GridProductsHome = (props) => {
                                     </div>
                                     <div className=" text-white text-sm flex justify-between gap-5">
                                             <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>handleCartItems(item)}>Add to cart</Button>
-                                            <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>dispatch(setWishListItems(item))}>wishlist</Button>
+                                            <Button className='bg-[#3D550C] px-1 rounded-sm' onClick={()=>handleWishListItems(item)}>wishlist</Button>
                                     </div>
                                 </div>
                             );

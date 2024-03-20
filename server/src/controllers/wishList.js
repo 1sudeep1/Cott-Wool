@@ -6,8 +6,14 @@ const jwt = require('jsonwebtoken');
 
 const addWishList = async (req, res) => {
     try {
-        const {wishListItems}=req.body
-        await WishList.create(wishListItems)
+        const {wishListItems, userId}=req.body
+        for(const item of wishListItems){
+            item.userId=userId
+            const existingItem= await WishList.findById(item._id)
+            if(!existingItem){
+                await WishList.create(wishListItems)
+            }
+        }
         res.json({ message: 'Wishlist updated successfully' });
     } catch (err) {
         console.log(err);
@@ -16,7 +22,7 @@ const addWishList = async (req, res) => {
 
 const clearWishList=async(req, res)=>{
     try{
-        await WishList.deleteMany()
+        await WishList.deleteMany({ userId: req.params.uId })
         res.json({msg:"WishList cleared successfully", check:true})
 
     }catch(err){
@@ -36,5 +42,17 @@ const removeWishListById= async(req, res)=>{
       }
 }
 
+const wishListItemsByUserId= async(req, res)=>{
+    try{
+        const getwishListItemsByUserId= await WishList.find({userId:req.params.userId})
+        if(getwishListItemsByUserId){
+            res.json({getwishListItemsByUserId})
+        }
+    }catch(err){
 
-module.exports = { addWishList, clearWishList, removeWishListById }
+        console.log(err)
+    }
+}
+
+
+module.exports = { addWishList, clearWishList, removeWishListById, wishListItemsByUserId }

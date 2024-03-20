@@ -1,3 +1,4 @@
+
 const express = require('express')
 const {addCart, clearCart, removeCartById, cartItemsByUserId}= require('../controllers/cart')
 router=express.Router()
@@ -6,10 +7,10 @@ router=express.Router()
 router.post('/cart', addCart)
 
 //routes for clearing cart
-router.delete('/cart/:uId', clearCart)
+router.delete('/carts/:uId', clearCart)
 
 //routes for deleting cart product by id
-router.delete('/carts/:id', removeCartById)
+router.delete('/cart/:id', removeCartById)
 
 //routes for fetching cart by userId
 router.get('/cart/:userId', cartItemsByUserId)

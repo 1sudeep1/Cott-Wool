@@ -14,7 +14,6 @@ import toast from 'react-hot-toast';
 const CartItems = () => {
     const router = useRouter()
     const dispatch = useDispatch()
-    const { cartItems} = useSelector(state => state.cart)
     const {userDetails}= useSelector(state=>state.user)
     const [cartList, setCartList]= useState([])
     const [finalPrice, setFinalPrice]= useState(0)
@@ -31,7 +30,7 @@ const CartItems = () => {
 
     useEffect(() => {
         fetchCartItems();
-    }, [cartItems]); // This effect runs when cartItems changes
+    }, []); // This effect runs when cartItems changes
     
     useEffect(() => {
         if (cartList) {
@@ -44,7 +43,7 @@ const CartItems = () => {
 
     const clearCart=async()=>{
         dispatch(clearCartItems())
-        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/carts/${userDetails._id}`)
         const data = await res.data
         toast(data.check===true? data.msg : data.msg,
             {
@@ -61,7 +60,7 @@ const CartItems = () => {
 
     const handleRemoveCartItem= async(cartItem)=>{
         dispatch(removeCartItems(cartItem))
-        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/carts/${cartItem._id}`)
+        const res= await axios.delete(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${cartItem._id}`)
         const data = await res.data
         toast(data.check===true? data.msg : data.msg,
             {
