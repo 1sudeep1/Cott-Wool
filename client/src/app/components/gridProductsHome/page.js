@@ -17,8 +17,8 @@ const GridProductsHome = (props) => {
     }
 
     const fetchCartItems= async()=>{
-        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
-        dispatch(setCounter(cartRes.data.getCartItemsByUserId.length));
+        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/carts/${userDetails._id}`)
+        dispatch(setCounter(cartRes.data.getCartItemsByUserIdCounter.length));
     }
 
     //function to save cart items to database
@@ -47,8 +47,8 @@ const GridProductsHome = (props) => {
     }
 
     const fetchWishListItems= async()=>{
-        const wishListRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist/${userDetails._id}`)
-        dispatch(setWishListCounter(wishListRes.data.getwishListItemsByUserId.length));
+        const wishListRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlists/${userDetails._id}`)
+        dispatch(setWishListCounter(wishListRes.data.getwishListItemsByUserIdCounter.length));
     }
 
         //function to save cart items to database

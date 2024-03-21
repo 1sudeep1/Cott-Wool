@@ -44,9 +44,24 @@ const removeWishListById= async(req, res)=>{
 
 const wishListItemsByUserId= async(req, res)=>{
     try{
-        const getwishListItemsByUserId= await WishList.find({userId:req.params.userId})
+        const count= await WishList.find().count();
+        const skipCount=(req.query.page-1)*5
+        const getwishListItemsByUserId= await WishList.find({userId:req.params.userId}).limit(5).skip(skipCount)
         if(getwishListItemsByUserId){
-            res.json({getwishListItemsByUserId})
+            res.json({getwishListItemsByUserId, count})
+        }
+    }catch(err){
+
+        console.log(err)
+    }
+}
+
+//wishlist controllers for counter
+const wishListItemsByUserIdCounter= async(req, res)=>{
+    try{
+        const getwishListItemsByUserIdCounter= await WishList.find({userId:req.params.userId})
+        if(getwishListItemsByUserIdCounter){
+            res.json({getwishListItemsByUserIdCounter})
         }
     }catch(err){
 
@@ -55,4 +70,4 @@ const wishListItemsByUserId= async(req, res)=>{
 }
 
 
-module.exports = { addWishList, clearWishList, removeWishListById, wishListItemsByUserId }
+module.exports = { addWishList, clearWishList, removeWishListById, wishListItemsByUserId, wishListItemsByUserIdCounter }

@@ -49,11 +49,27 @@ const removeCartById= async(req, res)=>{
       }
 }
 
+//cart controllers to fetch items to display items in page
 const cartItemsByUserId= async(req, res)=>{
     try{
-        const getCartItemsByUserId= await Cart.find({userId:req.params.userId})
+        const count= await Cart.find().count();
+        const skipCount=(req.query.page-1)*5
+        const getCartItemsByUserId= await Cart.find({userId:req.params.userId}).limit(5).skip(skipCount)
         if(getCartItemsByUserId){
-            res.json({getCartItemsByUserId})
+            res.json({getCartItemsByUserId, count})
+        }
+    }catch(err){
+
+        console.log(err)
+    }
+}
+
+//cart controllers to fetch items for counter
+const cartItemsByUserIdCounter= async(req, res)=>{
+    try{
+        const getCartItemsByUserIdCounter= await Cart.find({userId:req.params.userId})
+        if(getCartItemsByUserIdCounter){
+            res.json({getCartItemsByUserIdCounter})
         }
     }catch(err){
 
@@ -62,4 +78,4 @@ const cartItemsByUserId= async(req, res)=>{
 }
 
 
-module.exports = { addCart, clearCart, removeCartById, cartItemsByUserId }
+module.exports = { addCart, clearCart, removeCartById, cartItemsByUserId, cartItemsByUserIdCounter }
