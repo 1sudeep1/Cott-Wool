@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import Header from '../components/header/page'
 import Footer from '../components/footer/page'
-import { Image, Button} from '@nextui-org/react'
+import { Image, Button, Pagination} from '@nextui-org/react'
 import { IoTrash } from "react-icons/io5";
 import { useDispatch, useSelector } from 'react-redux'
 import { clearCartItems, removeCartItems } from '../redux/reducerSlices/cartSlice'
@@ -17,15 +17,16 @@ const CartItems = () => {
     const {userDetails}= useSelector(state=>state.user)
     const [cartList, setCartList]= useState([])
     const [finalPrice, setFinalPrice]= useState(0)
+    const [count, setCount] = useState(0)
 
     const handleProduct = (id) => {
         router.push(`/product-details/${id}`)
     }
 
-
-    const fetchCartItems= async()=>{
-        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}`)
+    const fetchCartItems= async(page = 1)=>{
+        const cartRes=await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/cart/${userDetails._id}?page=${page}`)
         setCartList(cartRes.data.getCartItemsByUserId)
+        setCount(cartRes.data.count)
     }
 
     useEffect(() => {
@@ -116,6 +117,7 @@ const CartItems = () => {
             <div className='flex justify-end my-5 me-44'>
                 <p className='text-2xl'>Total Price: Rs. {finalPrice.toLocaleString()}</p>
             </div>
+            <Pagination onChange={(page) => fetchCartItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
 
             <Footer />
         </>

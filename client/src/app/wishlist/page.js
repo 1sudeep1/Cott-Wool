@@ -17,14 +17,16 @@ const WishList = () => {
     const [wishList, setWishList] = useState([])
     const { userDetails } = useSelector(state => state.user)
     const { cartItems } = useSelector(state => state.cart)
+    const [count, setCount] = useState(0)
     const handleProduct = (id) => {
         router.push(`/product-details${id}`)
     }
 
 
-    const fetchWishListItems = async () => {
-        const wishListRes = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist/${userDetails._id}`)
+    const fetchWishListItems = async (page=1) => {
+        const wishListRes = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/wishlist/${userDetails._id}?page=${page}`)
         setWishList(wishListRes.data.getwishListItemsByUserId)
+        setCount(wishListRes.data.count)
     }
 
     const clearWishList = async () => {
@@ -130,6 +132,7 @@ const WishList = () => {
                     ))}
                 </tbody>
             </table>
+            <Pagination onChange={(page) => fetchWishListItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
             <Footer />
         </>
     )
