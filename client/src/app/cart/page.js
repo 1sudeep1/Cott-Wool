@@ -117,7 +117,7 @@ const CartItems = () => {
             <div className='flex justify-end my-5 me-44'>
                 <p className='text-2xl'>Total Price: Rs. {finalPrice.toLocaleString()}</p>
             </div>
-            <Pagination onChange={(page) => fetchCartItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
+            <Pagination className='w-full mx-auto' onChange={(page) => fetchCartItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
 
             <Footer />
         </>
