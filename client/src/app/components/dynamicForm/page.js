@@ -7,6 +7,9 @@ import toast from 'react-hot-toast';
 import axios from 'axios';
 
 const DynamicForm = (props) => {
+    const [category, setCategory] = useState([])
+    const [selectCategory, setSelectCategory] = useState('')
+    const [selectSubCategory, setSubSelectCategory] = useState([])
     const inputRef= useRef(null)
     const initialFieldValues = {};
     props.fieldList.map((item) =>{
@@ -15,19 +18,35 @@ const DynamicForm = (props) => {
                 )
     })
 
-    const [category, setCategory] = useState([])
-
+    //function to fetch category
     const fetchCategory = async () => {
-        const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
-        const data = await res.data
-        setCategory(data.allCategory)
+        try{
+            const res = await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`)
+            const data = await res.data
+            setCategory(data.allCategory)
+        }catch(err){
+            console.log(err)
+        }
+    }
+
+     //function to fetch Subcategory
+    const fetchSubCategory=async()=>{
+        try{
+            const res= await axios.get(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/sub-category/${selectCategory}`)
+            const data= await res.data
+            setSubSelectCategory(data.subCategory)
+        }catch(err){
+            console.log(err)
+        }
     }
 
     useEffect(() => {
         fetchCategory()
-    }, [])
+        fetchSubCategory()
+    }, [selectCategory])
 
 
+    //function to add category
     const handleCategory = async (inputCategory) => {
         try {
             const res = await axios.post(`http://localhost:${process.env.NEXT_PUBLIC_API_URL}/category`, inputCategory)
@@ -47,7 +66,7 @@ const DynamicForm = (props) => {
         }
     }
     
-
+  //function to add product
     const handleProduct = async (inputProduct) => {
         try {
             const formData= new FormData();
@@ -73,9 +92,9 @@ const DynamicForm = (props) => {
         }
     }
 
+      //function to update product
     const handleUpdate=async(productId, updateValue)=>{
         try{
-        //    console.log('sudeep alina', productId)
         const formData= new FormData();
         formData.append('productImage', inputRef.current.files[0])
     
@@ -169,13 +188,13 @@ const DynamicForm = (props) => {
                                     <label htmlFor="chooseCategory">{item.fieldName}</label>
                                     <Select
                                         placeholder={item.placeholder}
-                                        selectionMode="multiple"
+                                        selectionMode="single"
                                         className="max-w-xs"
                                         onChange={formikProps.handleChange}
                                         name={item.name}
                                     >
                                         {category.map((item) => (
-                                            <SelectItem key={item.categoryName} value={item.categoryName} className='bg-gray-400' >
+                                            <SelectItem key={item.categoryName} onClick={() => setSelectCategory(item.categoryName)} value={item.categoryName} className='bg-gray-400' >
                                                 {item.categoryName}
                                             </SelectItem>
                                         ))}
@@ -184,7 +203,7 @@ const DynamicForm = (props) => {
                             ))}
                             {props.chooseSubCategory && props.chooseSubCategory.map((item) => (
                                 <div className='flex gap-2 justify-between' key={item.fieldName}>
-                                    <label htmlFor="chooseCategory">{item.fieldName}</label>
+                                    <label htmlFor={item.fieldName}>{item.fieldName}</label>
                                     <Select
                                         placeholder={item.placeholder}
                                         selectionMode="multiple"
@@ -192,13 +211,11 @@ const DynamicForm = (props) => {
                                         onChange={formikProps.handleChange}
                                         name={item.name}
                                     >
-                                        {category.map((categoryItem) => (
-                                            categoryItem.subCategoryName.map((subCategory) => (
+                                            {selectSubCategory.length>0?selectSubCategory.map((subCategory) => (
                                                 <SelectItem key={subCategory} value={subCategory} className='bg-gray-400'>
                                                     {subCategory}
                                                 </SelectItem>
-                                            ))
-                                        ))}
+                                            )):null}
                                     </Select>
                                 </div>
                             ))}

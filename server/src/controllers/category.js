@@ -31,4 +31,14 @@ const getCategory = async (req, res) => {
     }
   }
 
-module.exports = { addCategory, getCategory }
+//routes functions for getting all users and server side pagination
+const getSubCategory = async (req, res) => {
+    try {
+      const getSubCategory = await Category.findOne({categoryName:req.params.cat});
+      res.json({subCategory:getSubCategory.subCategoryName})
+    } catch (err) {
+      console.log(err)
+    }
+  }
+
+module.exports = { addCategory, getCategory, getSubCategory }

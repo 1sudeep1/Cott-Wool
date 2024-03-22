@@ -132,7 +132,7 @@ const WishList = () => {
                     ))}
                 </tbody>
             </table>
-            <Pagination onChange={(page) => fetchWishListItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
+            <Pagination className='w-full mx-auto' onChange={(page) => fetchWishListItems(page)} total={Math.ceil(count / 5) || 1} initialPage={1} />
             <Footer />
         </>
     )
