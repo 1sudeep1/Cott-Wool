@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import { Button, Image} from "@nextui-org/react";
 import axios from 'axios';
