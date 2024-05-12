@@ -1,9 +1,13 @@
 import React from "react";
-import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, Pagination } from "@nextui-org/react";
+import { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, User, Chip, Tooltip, Pagination, Image } from "@nextui-org/react";
 import { useSelector } from "react-redux";
+import {Avatar} from "@nextui-org/react";
+import { IoTrash, IoEyeSharp} from "react-icons/io5";
+import { FaUserEdit } from "react-icons/fa";
 
 
 const columns = [
+    { name: "", uid: 'profilePic' },
     { name: "NAME", uid: 'fullName' },
     { name: "EMAIL", uid: "email" },
     { name: "PHONE", uid: "phone" },
@@ -17,18 +21,24 @@ const statusColorMap = {
 };
 
 const Customers = (props) => {
+    console.log(props.users)
 
     const renderCell = React.useCallback((user, columnKey) => {
         const cellValue = user[columnKey];
+        console.log(cellValue)
 
         switch (columnKey) {
-            case "name":
+            case "profilePic":
                 return (
-                    <User
-                        avatarProps={{ radius: "lg", src: user.avatar }}
-                        name={cellValue}
-                    >
-                    </User>
+                    <div className="flex flex-col">
+                        <Avatar src={`http://localhost:5000/uploads/profilePic/${cellValue}`} alt="profile picture" />
+                    </div>
+                );
+            case "fullName":
+                return (
+                    <div className="flex justify-between items-center">
+                        <p className="text-bold text-sm ">{cellValue}</p>
+                    </div>
                 );
             case "email":
                 return (
@@ -44,7 +54,7 @@ const Customers = (props) => {
                 );
             case "status":
                 return (
-                    <Chip color={statusColorMap[user.status]} size="sm" variant="flat">
+                    <Chip color={statusColorMap[user.status]} size="sm" variant="flat" className={`${userDetails._id === user._id ? 'text-green-500' : null}`}>
                         {userDetails._id===user._id? 'online': 'offline'}
                     </Chip>
                 );
@@ -53,17 +63,17 @@ const Customers = (props) => {
                     <div className="relative flex items-center gap-2">
                         <Tooltip content="Details">
                             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                {/* <EyeIcon /> */}View
+                            <IoEyeSharp />
                             </span>
                         </Tooltip>
                         <Tooltip content="Edit user">
                             <span className="text-lg text-default-400 cursor-pointer active:opacity-50">
-                                {/* <EditIcon /> */}Edit
+                            <FaUserEdit />
                             </span>
                         </Tooltip>
                         <Tooltip color="danger" content="Delete user">
                             <span className="text-lg text-danger cursor-pointer active:opacity-50">
-                                {/* <DeleteIcon /> */}Delete
+                                <IoTrash className="text-red-600 cursor-pointer" />
                             </span>
                         </Tooltip>
                     </div>
@@ -117,8 +127,8 @@ const Customers = (props) => {
                 </TableHeader>
                 <TableBody items={props.users}>
                     {(item) => (
-                        <TableRow key={item}>
-                            {(columnKey) => <TableCell className={props.usersId===userDetails._id? 'bg-gray-500 font-semibold text-white':null}>{renderCell(item, columnKey)}</TableCell>}
+                        <TableRow key={item} className={item._id===userDetails._id? 'bg-[#506b4c] font-semibold text-white':null}>
+                            {(columnKey) => <TableCell>{renderCell(item, columnKey)}</TableCell>}
                         </TableRow>
                     )}
                 </TableBody>

@@ -87,7 +87,16 @@ const Login = () => {
         }
     };
 
-
+    const handleFacebookLogin = async () => {
+        try {
+          const response = await axios.get('/auth/facebook/facebook-login');
+          // Handle success (e.g., redirect to Facebook login page)
+          window.location.href = response.data.redirectUrl; // Replace with your response structure
+        } catch (error) {
+          // Handle error (e.g., display error message)
+          console.error('Error:', error);
+        }
+      };
     return (
         <>
             <Header/>
@@ -141,11 +150,11 @@ const Login = () => {
                                     <FaInstagramSquare className='text-[#C53A8A]' />
                                 </div>
                             </div>
-
                         </Form>
                     )}
 
                 </Formik>
+                <Button onClick={handleFacebookLogin}>Login with Facebook</Button>
             </div>
             <Footer/>
         </>
